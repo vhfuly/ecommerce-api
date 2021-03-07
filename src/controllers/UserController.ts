@@ -1,12 +1,13 @@
 import mongoose from 'mongoose';
 import { Request, Response, NextFunction } from 'express'
 
-import User, { sendAuthJSON, setPassword } from '../models/User';
+import User from '../models/User';
 import sendEmailRecovery from '../helpers/email-recovery';
+import { setPassword, sendAuthJSON } from '../utils/password';
 
 class UserController {
   index(request: Request, response: Response , next: NextFunction) {
-    User.findById(request.body.id).then(user => {
+    User.findById(request.headers.id).then(user => {
       if(!user) return response.status(401).json({ errors: "Unregistered user" });
       return response.json({ user: sendAuthJSON(user) })
     }).catch(next);
@@ -36,6 +37,24 @@ class UserController {
       .then(() => response.json({ user: sendAuthJSON(user) }))
       .catch(next);
   }
+
+  update(request: Request, response: Response , next: NextFunction) {
+    const {name, email, password } = request.body
+    User.findById(request.headers.id).then(user => {
+      if(!user) return response.status(401).json({ errors: "Unregistered user" });
+      if (typeof name !== 'undefined') user.name = name;
+      if (typeof email !== 'undefined') user.email = email;
+      if (typeof password !== 'undefined') {
+        const { salt, hash }  = setPassword(password)
+        user.salt = salt;
+        user.hash = hash;
+      }
+      user.save()
+        .then(() => response.json({ user: sendAuthJSON(user) }))
+        .catch(next);
+    }).catch(next);
+  }
+
 }
 
 export { UserController };
