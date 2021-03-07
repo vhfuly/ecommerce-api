@@ -5,7 +5,6 @@ import User from '../models/User';
 import sendEmailRecovery from '../helpers/email-recovery';
 
 import { setPassword, sendAuthJSON, validatePassword, createTokenRecoveryPassword, finishTokenRecoveryPassword } from '../utils/password';
-import { usersRouter } from '../routes/api/v1/Users';
 
 class UserController {
   index(request: Request, response: Response , next: NextFunction) {
@@ -32,6 +31,8 @@ class UserController {
 
   store(request: Request, response: Response , next: NextFunction) {
     const {name, email, password } = request.body
+
+    if( !name || !email ||!password ) response.status(422).json({ error: 'Fill in all fields'})
 
     const { salt, hash }  = setPassword(password)
     const user = new User({ name , email, salt, hash });
