@@ -5,4 +5,4 @@ const router = Router();
 
 router.use('/user', usersRouter)
 
-export { router }
+export { router as routerApi }

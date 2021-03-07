@@ -6,9 +6,9 @@ import jwt from 'jsonwebtoken';
 import config from '../config/index';
 import { UserInterface } from '../interfaces/User';
 
-interface UserModel extends UserInterface, Document {}
+export interface UserDocument extends UserInterface, Document {}
 
-const UserSchema: Schema<UserModel> = new Schema({
+const UserSchema: Schema<UserDocument, UserModel> = new Schema({
   name: {
     type: String,
     required: [true,'can not spin empty'],
@@ -45,9 +45,14 @@ const UserSchema: Schema<UserModel> = new Schema({
 
 UserSchema.plugin(uniqueValidator, { message: 'Is already being used'});
 
-UserSchema.methods.setPassword = function(password: string): void {
-  this.salt = crypto.randomBytes(16).toString("hex");
-  this.hash = crypto.pbkdf2Sync(password, this.salt, 10000,512, "sha512").toString("hex");
+export const setPassword = function(password: string): {salt: string , hash: string} {
+  const salt = crypto.randomBytes(16).toString("hex");
+  const hash = crypto.pbkdf2Sync(password, salt, 10000,512, "sha512").toString("hex");
+  console.log(hash)
+  return { 
+    salt, 
+    hash
+  }
 };
 
 UserSchema.methods.validatePassword = function(password: crypto.BinaryLike): boolean {
@@ -55,23 +60,23 @@ UserSchema.methods.validatePassword = function(password: crypto.BinaryLike): boo
   return hash === this.hash;
 };
 
-UserSchema.methods.createToken = function(): object {
+export const sendAuthJSON = function(user: UserDocument): object {
   const today = new Date();
   const exp = new Date(today);
   exp.setDate(today.getDate() + 15);
 
   const token = jwt.sign({
-    id: this._id,
-    email: this.email,
-    name: this.name,
+    id: user._id,
+    email: user.email,
+    name: user.name,
     exp: (exp.getTime() / 1000)
   }, config.secret);
   return {
-    _id: this._id,
-    name: this.name,
-    email: this.email,
-    store: this.store,
-    role: this.permission,
+    _id: user._id,
+    name: user.name,
+    email: user.email,
+    store: user.store,
+    role: user.permission,
     token: token
   };
 };
@@ -88,4 +93,5 @@ UserSchema.methods.finishTokenRecoveryPassword = function(): object{
   return this.recovery;
 };
 
-export const User: Model<UserModel> =  model<UserModel>("User", UserSchema);
+export interface UserModel extends Model<UserDocument> {}
+export default model<UserDocument, UserModel>("User", UserSchema)
