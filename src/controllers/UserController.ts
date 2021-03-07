@@ -3,7 +3,8 @@ import { Request, Response, NextFunction } from 'express'
 
 import User from '../models/User';
 import sendEmailRecovery from '../helpers/email-recovery';
-import { setPassword, sendAuthJSON, validatePassword } from '../utils/password';
+
+import { setPassword, sendAuthJSON, validatePassword, createTokenRecoveryPassword, finishTokenRecoveryPassword } from '../utils/password';
 import { usersRouter } from '../routes/api/v1/Users';
 
 class UserController {
@@ -71,7 +72,58 @@ class UserController {
       if(!user) return response.status(401).json({ error: "Unregistered user" });
       if(validatePassword(password, user)) return response.status(401).json({ error: 'invalid password' });
       return response.json({ user: sendAuthJSON(user) });
-  }).catch(next);
+    }).catch(next);
+  }
+
+  // RECOVERY
+
+  showRecovery(request: Request, response: Response , next: NextFunction) {
+    return response.render('recovery', { error: null, success: null });
+  }
+
+
+  createRecovery(request: Request, response: Response , next: NextFunction) {
+    const { email } = request.body;
+    if(!email) return response.render('recovery', { error: 'Fill in with your email', success: null });
+
+    User.findOne({ email }).then((user) => {
+      if(!user) return response.render("recovery", { error: 'There is no user with this email', success: null });
+      const recoveryData = createTokenRecoveryPassword(user);
+      return user.save().then(() => {
+        sendEmailRecovery({ user, recovery: recoveryData }, (error = null, success = null) => {
+          return response.render('recovery', { error, success });
+        });
+      }).catch(next);
+    }).catch(next);
+  }
+
+  showCompleteRecovery(request: Request, response: Response , next: NextFunction) {
+    if(!request.query.token) return response.render('recovery', { error: 'Unidentified token', success: null });
+    User.findOne({ 'recovery.token': request.query.token }).then(user => {
+      if(!user) return response.render('recovery', { error: 'There is no user with this token', success: null });
+      if( new Date(user.recovery.date) < new Date() ) return response.render('recovery', { error: 'Expired token. Try again.', success: null });
+      return response.render('recovery/store', { error: null, success: null, token: request.query.token });
+    }).catch(next);
+  }
+
+  completeRecovery(request: Request, response: Response , next: NextFunction) {
+    const { token, password } = request.body;
+    if(!token || !password) return response.render('recovery/store', { error: 'Please fill in again with your new password', success: null, token: token });
+    User.findOne({ 'recovery.token': token }).then(user => {
+      if(!user) return response.render('recovery', { error: 'Unidentified user', success: null });
+
+      finishTokenRecoveryPassword(user);
+      const { salt, hash }  = setPassword(password);
+      user.salt = salt;
+      user.hash = hash;
+      return user.save().then(() => {
+          return response.render('recovery/store', {
+              error: null,
+              success: 'Password changed successfully. Try logging in again...',
+              token: null
+          });
+      }).catch(next);
+    });
   }
 
 }

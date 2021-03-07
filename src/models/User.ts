@@ -43,17 +43,5 @@ const UserSchema: Schema<UserDocument, UserModel> = new Schema({
 
 UserSchema.plugin(uniqueValidator, { message: 'Is already being used'});
 
-// RECOVERY
-UserSchema.methods.createTokenRecoveryPassword = function(): object{
-  this.recovery.token = crypto.randomBytes(16).toString("hex");
-  this.recovery.date = new Date( new Date().getTime() + 24*60*60*1000 );
-  return this.recovery;
-};
-
-UserSchema.methods.finishTokenRecoveryPassword = function(): object{
-  this.recovery = { token: null, date: null };
-  return this.recovery;
-};
-
 export interface UserModel extends Model<UserDocument> {}
 export default model<UserDocument, UserModel>("User", UserSchema)

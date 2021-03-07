@@ -19,6 +19,17 @@ export const validatePassword = function(password: string, user: UserDocument): 
   return hash === user.hash;
 };
 
+export const createTokenRecoveryPassword = function(user: UserDocument): object{
+  user.recovery.token = crypto.randomBytes(16).toString("hex");
+  user.recovery.date = new Date( new Date().getTime() + 24*60*60*1000 );
+  return user.recovery;
+};
+
+export const finishTokenRecoveryPassword = function(user: UserDocument): object{
+  user.recovery = { token: null, date: null };
+  return user.recovery;
+};
+
 export const sendAuthJSON = function(user: UserDocument): object {
   const today = new Date();
   const exp = new Date(today);
