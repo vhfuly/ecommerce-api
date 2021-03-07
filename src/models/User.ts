@@ -32,8 +32,8 @@ const UserSchema: Schema<UserDocument, UserModel> = new Schema({
   salt: { type: String },
   recovery: {
     type: {
-      token: String,
-      date: Date
+      token: String || undefined,
+      date: Date || undefined
     },
     default: {}
   }

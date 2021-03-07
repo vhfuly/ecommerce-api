@@ -1,21 +1,22 @@
-import mongoose from 'mongoose';
 import { Request, Response, NextFunction } from 'express'
 
 import User from '../models/User';
-import sendEmailRecovery from '../helpers/email-recovery';
+import sendEmailRecovery from '../helpers/emailRecovery';
 
 import { setPassword, sendAuthJSON, validatePassword, createTokenRecoveryPassword, finishTokenRecoveryPassword } from '../utils/password';
 
 class UserController {
   index(request: Request, response: Response , next: NextFunction) {
-    User.findById(request.headers.id).then(user => {
+    User.findById(request.payload.id).then(user => {
       if(!user) return response.status(401).json({ error: "Unregistered user" });
       return response.json({ user: sendAuthJSON(user) })
     }).catch(next);
   }
 
   show(request: Request, response: Response , next: NextFunction) {
-    User.findById(request.params.id).populate({ path: 'store'}).then(user => {
+    User.findById(request.params.id)
+    // .populate({ path: 'store'})
+    .then(user => {
       if(!user) return response.status(401).json({ error: "Unregistered user" });
       return response.json({
         user: {
@@ -30,12 +31,12 @@ class UserController {
 
 
   store(request: Request, response: Response , next: NextFunction) {
-    const {name, email, password } = request.body
+    const {name, email, password, store } = request.body
 
-    if( !name || !email ||!password ) response.status(422).json({ error: 'Fill in all fields'})
+    if( !name || !email ||!password || !store) response.status(422).json({ error: 'Fill in all fields'})
 
     const { salt, hash }  = setPassword(password)
-    const user = new User({ name , email, salt, hash });
+    const user = new User({ name , email, salt, hash, store });
     user.save()
       .then(() => response.json({ user: sendAuthJSON(user) }))
       .catch(next);
@@ -43,7 +44,7 @@ class UserController {
 
   update(request: Request, response: Response , next: NextFunction) {
     const {name, email, password } = request.body
-    User.findById(request.headers.id).then(user => {
+    User.findById(request.payload.id).then(user => {
       if(!user) return response.status(401).json({ error: "Unregistered user" });
       if (typeof name !== 'undefined') user.name = name;
       if (typeof email !== 'undefined') user.email = email;
@@ -59,7 +60,7 @@ class UserController {
   }
 
   remove(request: Request, response: Response , next: NextFunction) {
-    User.findById(request.headers.id).then(user => {
+    User.findById(request.payload.id).then(user => {
       if(!user) return response.status(401).json({ error: "Unregistered user" });
       return user.remove().then(() => {
         return response.json({ deleted: true });
@@ -71,7 +72,7 @@ class UserController {
     const { email, password } =request.body;
     User.findOne({ email }).then((user) => {
       if(!user) return response.status(401).json({ error: "Unregistered user" });
-      if(validatePassword(password, user)) return response.status(401).json({ error: 'invalid password' });
+      if(!validatePassword(password, user)) return response.status(401).json({ error: 'invalid password' });
       return response.json({ user: sendAuthJSON(user) });
     }).catch(next);
   }
@@ -85,12 +86,12 @@ class UserController {
 
   createRecovery(request: Request, response: Response , next: NextFunction) {
     const { email } = request.body;
-    if(!email) return response.render('recovery', { error: 'Fill in with your email', success: null });
+    if(!email) return response.render('src/recovery', { error: 'Fill in with your email', success: null });
 
     User.findOne({ email }).then((user) => {
       if(!user) return response.render("recovery", { error: 'There is no user with this email', success: null });
       const recoveryData = createTokenRecoveryPassword(user);
-      return user.save().then(() => {
+      return User.updateOne({_id: user._id},{recovery: recoveryData }).then(() => {
         sendEmailRecovery({ user, recovery: recoveryData }, (error = null, success = null) => {
           return response.render('recovery', { error, success });
         });

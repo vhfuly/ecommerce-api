@@ -1,0 +1,6 @@
+const dbs = {
+  dbTest: 'mongodb://localhost:27017/ecommerce-api-teste',
+  dbProduction: 'mongodb://localhost:27017/ecommerce-api'
+}
+
+export { dbs }

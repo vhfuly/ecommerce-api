@@ -18,7 +18,12 @@ const PORT = process.env.PORT || 3000;
 app.use('/public', express.static(__dirname + '/public'));
 app.use('/public/images', express.static(__dirname + '/public/images'));
 
-// mongoose.connect(process.env.DB_URI, { useNewUrlParser: true });
+import { dbs } from './config/database';
+const dbURI = isProduction ? dbs.dbProduction : dbs.dbTest;
+mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true  })
+  .then(() => console.log('connection succesful'))
+  .catch((err) => console.error(err));;
+
 
 app.set('view engine', 'ejs')
 

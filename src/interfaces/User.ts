@@ -1,7 +1,7 @@
 export interface UserInterface {
   email: string;
   name: string;
-  store: Store;
+  store: string;
   permission: Array<string>;
   hash: string;
   salt: string;
@@ -9,6 +9,6 @@ export interface UserInterface {
 }
 
 interface Recovery {
-  token: String;
-  date: Date;
+  token: string | undefined;
+  date: Date | undefined;
 }

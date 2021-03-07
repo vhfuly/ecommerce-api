@@ -16,13 +16,17 @@ export const setPassword = function(password: string): {salt: string , hash: str
 
 export const validatePassword = function(password: string, user: UserDocument): boolean {
   const hash = crypto.pbkdf2Sync(password, user.salt, 10000, 512, "sha512").toString("hex");
+  console.log(hash === user.hash)
   return hash === user.hash;
 };
 
-export const createTokenRecoveryPassword = function(user: UserDocument): object{
+export const createTokenRecoveryPassword = function(user: UserDocument): {token: string, date: Date}{
   user.recovery.token = crypto.randomBytes(16).toString("hex");
   user.recovery.date = new Date( new Date().getTime() + 24*60*60*1000 );
-  return user.recovery;
+  return {
+    token: user.recovery.token,
+    date: user.recovery.date
+  }
 };
 
 export const finishTokenRecoveryPassword = function(user: UserDocument): object{
