@@ -1,9 +1,7 @@
 import { Document, Schema, model, Model } from 'mongoose'
 import uniqueValidator from 'mongoose-unique-validator';
 import crypto from 'crypto';
-import jwt from 'jsonwebtoken';
 
-import config from '../config/index';
 import { UserInterface } from '../interfaces/User';
 
 export interface UserDocument extends UserInterface, Document {}
@@ -44,11 +42,6 @@ const UserSchema: Schema<UserDocument, UserModel> = new Schema({
 );
 
 UserSchema.plugin(uniqueValidator, { message: 'Is already being used'});
-
-UserSchema.methods.validatePassword = function(password: crypto.BinaryLike): boolean {
-  const hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, "sha512").toString("hex");
-  return hash === this.hash;
-};
 
 // RECOVERY
 UserSchema.methods.createTokenRecoveryPassword = function(): object{

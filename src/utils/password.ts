@@ -14,6 +14,11 @@ export const setPassword = function(password: string): {salt: string , hash: str
   }
 };
 
+export const validatePassword = function(password: string, user: UserDocument): boolean {
+  const hash = crypto.pbkdf2Sync(password, user.salt, 10000, 512, "sha512").toString("hex");
+  return hash === user.hash;
+};
+
 export const sendAuthJSON = function(user: UserDocument): object {
   const today = new Date();
   const exp = new Date(today);
