@@ -1,16 +1,23 @@
 import { Request, Response, NextFunction } from 'express'
 
-import User from '../models/User';
+import User, { UserDocument } from '../models/User';
 import sendEmailRecovery from '../helpers/emailRecovery';
 
 import { setPassword, sendAuthJSON, validatePassword, createTokenRecoveryPassword, finishTokenRecoveryPassword } from '../utils/password';
 
 class UserController {
-  index(request: Request, response: Response , next: NextFunction) {
-    User.findById(request.payload.id).then(user => {
+  async index(request: Request, response: Response , next: NextFunction) {
+
+    try {
+      console.log(request.headers)
+      const user: UserDocument = await User.findById(request.headers.id)
       if(!user) return response.status(401).json({ error: "Unregistered user" });
       return response.json({ user: sendAuthJSON(user) })
-    }).catch(next);
+    } catch (error) {
+      response.status(500).json({error :'Error to find the user'});
+      
+    }
+
   }
 
   show(request: Request, response: Response , next: NextFunction) {

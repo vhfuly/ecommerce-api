@@ -9,6 +9,6 @@ export interface UserInterface {
 }
 
 interface Recovery {
-  token: string | undefined;
-  date: Date | undefined;
+  token: string;
+  date: Date;
 }
