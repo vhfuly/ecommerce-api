@@ -1,6 +1,5 @@
 import { Document, Schema, model, Model } from 'mongoose'
 import uniqueValidator from 'mongoose-unique-validator';
-import crypto from 'crypto';
 
 import { UserInterface } from '../interfaces/User';
 
@@ -44,4 +43,4 @@ const UserSchema: Schema<UserDocument, UserModel> = new Schema({
 UserSchema.plugin(uniqueValidator, { message: 'Is already being used'});
 
 export interface UserModel extends Model<UserDocument> {}
-export default model<UserDocument, UserModel>("User", UserSchema)
+export default model<UserDocument, UserModel>('User', UserSchema)
