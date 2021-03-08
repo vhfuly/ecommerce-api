@@ -5,7 +5,7 @@ import { StoreInterface } from '../interfaces/Store';
 
 export interface StoreDocument extends StoreInterface, Document {}
 
-const StoreSchema: Schema<StoreDocument, UserModel> = new Schema({
+const StoreSchema: Schema<StoreDocument, StoreModel> = new Schema({
   name: { type: String, required: true },
   email: { type: String },
   cnpj: { type: String, required: true, unique: true },
