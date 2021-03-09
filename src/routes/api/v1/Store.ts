@@ -2,7 +2,7 @@ import { Router } from 'express';
 
 import { storeValidation } from '../../../controllers/validations/storeValidation';
 import { auth } from '../../auth';
-import { StoreController } from '../../../controllers/UserController';
+import { StoreController } from '../../../controllers/StoreController';
 
 const storeController = new StoreController();
 
