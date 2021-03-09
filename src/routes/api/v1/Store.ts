@@ -11,7 +11,7 @@ const router = Router();
 router.get('/', storeController.index);
 router.get('/:id', storeController.show);
 
-router.post('/', auth.required, storeValidation, storeController.store);
+router.post('/', auth.required, storeController.store);
 router.put('/:id', auth.required, storeValidation, storeController.update);
 router.delete('/:id', auth.required, storeValidation, storeController.remove);
 

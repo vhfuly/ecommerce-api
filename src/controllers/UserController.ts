@@ -18,7 +18,8 @@ class UserController {
 
   async show(request: Request, response: Response , next: NextFunction) {
     try {
-      const user: UserDocument = await User.findById(request.params.id)
+      const { id } = request.params;
+      const user: UserDocument = await User.findOne({_id: id});
       // .populate({ path: 'store'})
       if(!user) return response.status(401).json({ error: "Unregistered user" });
       return response.json({
@@ -62,6 +63,7 @@ class UserController {
         user.salt = salt;
         user.hash = hash;
       }
+      console.log(user)
       await user.save()
       response.json({ user: sendAuthJSON(user)})
     } catch (error) {

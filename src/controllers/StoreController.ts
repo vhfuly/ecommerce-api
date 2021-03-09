@@ -15,7 +15,7 @@ class StoreController {
   async show(request: Request, response: Response , next: NextFunction) {
     try {
       const { id } = request.params;
-      const store: StoreDocument = await Store.findById({id}, {_id:1, name: 1, cnpj:1, email:1, phones:1, address: 1 })
+      const store: StoreDocument = await Store.findOne({_id : id}, {_id:1, name: 1, cnpj:1, email:1, phones:1, address: 1 });
       response.json(store);
     } catch (error) {
       response.json({error: 'No store found'})
@@ -31,9 +31,11 @@ class StoreController {
       if (!email) error.push('email');
       if (!phones) error.push('phones');
       if (!address) error.push('address');
-      if (!error?.length) return response.status(422).json({error: 'required', payload: error});
+      if (error?.length) return response.status(422).json({error: 'required', payload: error});
+      const foundCnpj  = await Store.findOne({cnpj});
+      if (foundCnpj) return response.status(422).json({error: 'Existing cnpj'});
       const store = new Store({ name, cnpj, email, phones, address });
-      store.save()
+      await store.save();
       response.json(store);
     } catch (error) {
       response.json({error: 'Error when saving store'})
@@ -44,14 +46,14 @@ class StoreController {
     try {
       const { name, cnpj, email, phones, address } = request.body;
       const { id } = request.params;
-      const store: StoreDocument = await Store.findById({id});
+      const store: StoreDocument = await Store.findOne({_id: id});
       if (!store) return response.status(422).json({error: 'Store does not exist'})
       if (name) store.name = name;
       if (cnpj) store.cnpj = cnpj;
       if (email) store.email = email;
       if (phones) store.phones = phones;
       if (address) store.address = address;
-      store.save()
+      await store.save()
       response.json(store);
     } catch (error) {
       response.json({error: 'Error when updating data'})
@@ -61,9 +63,9 @@ class StoreController {
   async remove(request: Request, response: Response , next: NextFunction) {
     try {
       const { id } = request.params;
-      const store: StoreDocument = await Store.findById({id});
+      const store: StoreDocument = await Store.findOne({_id: id});
       if (!store) return response.status(422).json({error: 'Store does not exist'})
-      store.remove()
+      await store.remove()
       response.send({ deleted: true });
     } catch (error) {
       response.json({error: 'Error when removing store'})
