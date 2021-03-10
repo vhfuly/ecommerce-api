@@ -7,6 +7,7 @@ import cors from 'cors';
 import {ValidationError} from 'express-validation';
 
 import { router } from './routes/index';
+import { dbs } from './config/database';
 
 const app = express();
 app.use(express.json());
@@ -17,11 +18,11 @@ const PORT = process.env.PORT || 3000;
 app.use('/public', express.static(__dirname + '/public'));
 app.use('/public/images', express.static(__dirname + '/public/images'));
 
-import { dbs } from './config/database';
-import { errors } from 'express-validation';
+
+
 const dbURI = isProduction ? dbs.dbProduction : dbs.dbTest;
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true  })
-  .then(() => console.log('connection succesful'))
+  .then(() => console.log('connection successful'))
   .catch((err) => console.error(err));;
 
 

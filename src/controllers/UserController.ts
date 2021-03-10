@@ -39,7 +39,6 @@ class UserController {
   async store(request: Request, response: Response , next: NextFunction) {
     try {
       const {name, email, password, store } = request.body
-      if( !name || !email ||!password || !store) return response.status(422).json({ error: 'Fill in all fields'})
       const { salt, hash }  = setPassword(password)
       const account = await User.findOne({email})
       if(account) return response.status(422).json({ error: 'The email already has an account'})
