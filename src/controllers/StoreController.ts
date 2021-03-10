@@ -25,13 +25,6 @@ class StoreController {
   async store(request: Request, response: Response , next: NextFunction) {
     try {
       const { name, cnpj, email, phones, address } = request.body;
-      const error = [];
-      if (!name) error.push('name');
-      if (!cnpj) error.push('cnpj');
-      if (!email) error.push('email');
-      if (!phones) error.push('phones');
-      if (!address) error.push('address');
-      if (error?.length) return response.status(422).json({error: 'required', payload: error});
       const foundCnpj  = await Store.findOne({cnpj});
       if (foundCnpj) return response.status(422).json({error: 'Existing cnpj'});
       const store = new Store({ name, cnpj, email, phones, address });
@@ -45,8 +38,8 @@ class StoreController {
   async update(request: Request, response: Response , next: NextFunction) {
     try {
       const { name, cnpj, email, phones, address } = request.body;
-      const { id } = request.params;
-      const store: StoreDocument = await Store.findOne({_id: id});
+      const { storeID } = request.query;
+      const store: StoreDocument = await Store.findOne({_id: storeID});
       if (!store) return response.status(422).json({error: 'Store does not exist'})
       if (name) store.name = name;
       if (cnpj) store.cnpj = cnpj;
@@ -62,8 +55,8 @@ class StoreController {
 
   async remove(request: Request, response: Response , next: NextFunction) {
     try {
-      const { id } = request.params;
-      const store: StoreDocument = await Store.findOne({_id: id});
+      const { storeID } = request.query;
+      const store: StoreDocument = await Store.findOne({_id: storeID});
       if (!store) return response.status(422).json({error: 'Store does not exist'})
       await store.remove()
       response.send({ deleted: true });
