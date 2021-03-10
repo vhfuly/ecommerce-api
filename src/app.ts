@@ -1,12 +1,11 @@
 import compression from 'compression';
 import express, { Request, Response, NextFunction } from 'express';
-import ejs from 'ejs';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import morgan from 'morgan';
 import cors from 'cors';
+import {ValidationError} from 'express-validation';
 
-import { AppError } from './errors/AppError';
 import { router } from './routes/index';
 
 const app = express();
@@ -19,6 +18,7 @@ app.use('/public', express.static(__dirname + '/public'));
 app.use('/public/images', express.static(__dirname + '/public/images'));
 
 import { dbs } from './config/database';
+import { errors } from 'express-validation';
 const dbURI = isProduction ? dbs.dbProduction : dbs.dbTest;
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true  })
   .then(() => console.log('connection succesful'))
@@ -37,17 +37,10 @@ app.use(bodyParser.json({ limit: 1.5*1024*1024 }));
 
 app.use("/", router);
 
-app.use((err: Error, request:Request, response: Response, _next: NextFunction) => {
-  if(err instanceof AppError) {
-    return response.status(err.statusCode).json({
-      message: err.message
-    })
-  }
-
-  return response.status(500).json({
-    status: "Error",
-    message: `Internal server error ${err.message}`,
-  })
+app.use((err: ValidationError , request:Request, response: Response, _next: NextFunction) => {
+  response.status(err.statusCode || 500);
+  if(err.statusCode !== 404) console.warn("Error: ", err, new Date());
+  response.json(err);
 });
 
 export { app, PORT };

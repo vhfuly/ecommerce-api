@@ -12,7 +12,7 @@ class UserController {
       if(!user) return response.status(401).json({ error: "Unregistered user" });
       return response.json({ user: sendAuthJSON(user) })
     } catch (error) {
-      response.status(500).json({error :'Error to find the user'});
+      response.json({error : error});
     }
   }
 

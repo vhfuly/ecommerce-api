@@ -1,13 +1,14 @@
 import { Router } from 'express';
+import { validate } from 'express-validation';
 
 import { auth } from '../../auth';
 import { UserController } from '../../../controllers/UserController';
+import { UserValidation } from '../../../controllers/validations/UserValidation';
 
 const userController = new UserController();
-
 const router = Router();
 
-router.post('/login', userController.login)
+router.post('/login', validate(UserValidation.login), userController.login)
 router.post('/register', userController.store)
 router.put('/', auth.required, userController.update)
 router.delete('/', auth.required, userController.remove)
