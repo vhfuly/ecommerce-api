@@ -8,7 +8,7 @@ class StoreController {
       const stores: StoreDocument[] = await Store.find({}, {_id:1, name: 1, cnpj:1, email:1, phones:1, address: 1 })
       response.json(stores);
     } catch (error) {
-      response.json({error: 'No stores found'})
+      next(error);
     }
   }
 
@@ -18,7 +18,7 @@ class StoreController {
       const store: StoreDocument = await Store.findOne({_id : id}, {_id:1, name: 1, cnpj:1, email:1, phones:1, address: 1 });
       response.json(store);
     } catch (error) {
-      response.json({error: 'No store found'})
+      next(error);
     }
   }
 
@@ -31,7 +31,7 @@ class StoreController {
       await store.save();
       response.json(store);
     } catch (error) {
-      response.json({error: 'Error when saving store'})
+      next(error);
     }
   }
 
@@ -49,7 +49,7 @@ class StoreController {
       await store.save()
       response.json(store);
     } catch (error) {
-      response.json({error: 'Error when updating data'})
+      next(error);
     }
   }
 
@@ -61,7 +61,7 @@ class StoreController {
       await store.remove()
       response.send({ deleted: true });
     } catch (error) {
-      response.json({error: 'Error when removing store'})
+      next(error);
     }
   }
 }
