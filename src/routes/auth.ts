@@ -1,7 +1,6 @@
-// import { GetTokenCallback } from 'express-jwt';
 import jwt from 'express-jwt';
 import { Request } from 'express';
-import config from '../config'
+import config from '@config/index';
 
 
 const secret = config.secret

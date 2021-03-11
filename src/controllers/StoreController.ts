@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 
-import Store, { StoreDocument } from '../models/Store';
+import Store, { StoreDocument } from '@models/Store';
 
 class StoreController {
   async index(request: Request, response: Response , next: NextFunction) {

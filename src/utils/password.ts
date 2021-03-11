@@ -1,8 +1,8 @@
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 
-import { UserDocument } from '../models/User';
-import config from '../config';
+import { UserDocument } from '@models/User';
+import config from '@config/index';
 
 
 export const setPassword = function(password: string): {salt: string , hash: string} {

@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import { validate } from 'express-validation';
 
-import { storeValidation } from '../../../controllers/validations/StoreValidation';
+import { storeValidation } from '@validations/StoreValidation';
 import { auth } from '../../auth';
-import { StoreController } from '../../../controllers/StoreController';
+import { StoreController } from '@controllers/StoreController';
 
 const storeController = new StoreController();
 

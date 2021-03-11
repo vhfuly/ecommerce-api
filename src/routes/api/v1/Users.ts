@@ -2,8 +2,8 @@ import { Router } from 'express';
 import { validate } from 'express-validation';
 
 import { auth } from '../../auth';
-import { UserController } from '../../../controllers/UserController';
-import { UserValidation } from '../../../controllers/validations/UserValidation';
+import { UserController } from '@controllers/UserController';
+import { UserValidation } from '@validations/UserValidation';
 
 const userController = new UserController();
 const router = Router();

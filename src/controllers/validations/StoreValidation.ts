@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import Joi from 'joi';
 
-import User from '../../models/User';
+import User from '@models/User';
 
 const storeValidation = { 
   admin: async (request: Request, response: Response , next: NextFunction) => {

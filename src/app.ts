@@ -5,8 +5,8 @@ import mongoose from 'mongoose';
 import morgan from 'morgan';
 import cors from 'cors';
 import { ValidationError } from 'express-validation';
-import { router } from './routes/index';
-import { dbs } from './config/database';
+import { router } from './routes';
+import { dbs } from '@config/database';
 
 const app = express();
 app.use(express.json());
