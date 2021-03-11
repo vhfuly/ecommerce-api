@@ -1,7 +1,7 @@
 import { Document, Schema, model, Model } from 'mongoose'
 import uniqueValidator from 'mongoose-unique-validator';
 
-import { StoreInterface } from '../interfaces/Store';
+import { StoreInterface } from '@interfaces/Store';
 
 export interface StoreDocument extends StoreInterface, Document {}
 

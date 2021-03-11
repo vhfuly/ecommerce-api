@@ -22,6 +22,7 @@
       "@controllers/*": ["./src/controllers/*"],
       "@models/*": ["./src/models/*"],
       "@validations/*": ["./src/controllers/validations/*"],
+      "@interfaces/*": ["./src/interfaces/*"],
       "@config/*": ["./src/config/*"]
     }
   },
