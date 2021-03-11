@@ -1,5 +1,6 @@
 import { Document, Schema, model, Model } from 'mongoose'
 import mongoosePaginate from 'mongoose-paginate';
+import { ClientInterface } from '@interfaces/Client';
 
 export interface ClientDocument extends ClientInterface, Document {}
 
