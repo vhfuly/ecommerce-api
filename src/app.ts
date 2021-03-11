@@ -34,10 +34,10 @@ app.use(bodyParser.json({ limit: 1.5 * 1024 * 1024 }));
 
 app.use('/', router);
 
-app.use((err: ValidationError, request:Request, response: Response) => {
+app.use((err: ValidationError, request:Request, response: Response, _next: NextFunction) => {
   response.status(err.statusCode || 500);
   if (err.statusCode !== 404) console.warn('Error: ', err, new Date());
   response.json(err);
 });
 
-export { app, PORT };
+export { app, PORT }

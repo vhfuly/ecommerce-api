@@ -12,7 +12,7 @@ import {
 } from '../utils/password';
 
 class UserController {
-  async index(request: Request, response: Response): Promise<any> {
+  async index(request: Request, response: Response) {
     try {
       const user: UserDocument = await User.findById(request.headers.id);
       if (!user) return response.status(401).json({ error: 'Unregistered user' });
@@ -22,7 +22,7 @@ class UserController {
     }
   }
 
-  async show(request: Request, response: Response, next: NextFunction) {
+  async show(request: Request, response: Response, _next: NextFunction) {
     try {
       const { id } = request.params;
       const user: UserDocument = await User.findOne({ _id: id });
@@ -41,7 +41,7 @@ class UserController {
     }
   }
 
-  async store(request: Request, response: Response, next: NextFunction) {
+  async store(request: Request, response: Response, _next: NextFunction) {
     try {
       const {
         name, email, password, store,
@@ -59,7 +59,7 @@ class UserController {
     }
   }
 
-  async update(request: Request, response: Response, next: NextFunction) {
+  async update(request: Request, response: Response, _next: NextFunction) {
     try {
       const { name, email, password } = request.body;
       const user: UserDocument = await User.findById(request.headers.id);
@@ -79,7 +79,7 @@ class UserController {
     }
   }
 
-  async remove(request: Request, response: Response, next: NextFunction) {
+  async remove(request: Request, response: Response, _next: NextFunction) {
     try {
       const user: UserDocument = await User.findById(request.headers.id);
       if (!user) return response.status(401).json({ error: 'Unregistered user' });
@@ -90,7 +90,7 @@ class UserController {
     }
   }
 
-  async login(request: Request, response: Response, next: NextFunction) {
+  async login(request: Request, response: Response, _next: NextFunction) {
     try {
       const { email, password } = request.body;
       const user: UserDocument = await User.findOne({ email });
@@ -104,11 +104,11 @@ class UserController {
 
   // RECOVERY
 
-  showRecovery(request: Request, response: Response, next: NextFunction) {
+  showRecovery(_request: Request, response: Response, _next: NextFunction) {
     return response.render('recovery', { error: null, success: null });
   }
 
-  async createRecovery(request: Request, response: Response, next: NextFunction) {
+  async createRecovery(request: Request, response: Response, _next: NextFunction) {
     try {
       const { email } = request.body;
       if (!email) return response.render('src/recovery', { error: 'Fill in with your email', success: null });
@@ -121,7 +121,7 @@ class UserController {
     }
   }
 
-  async showCompleteRecovery(request: Request, response: Response, next: NextFunction) {
+  async showCompleteRecovery(request: Request, response: Response, _next: NextFunction) {
     try {
       if (!request.query.token) return response.render('recovery', { error: 'Unidentified token', success: null });
       const user: UserDocument = await User.findOne({ 'recovery.token': request.query.token });
@@ -133,7 +133,7 @@ class UserController {
     }
   }
 
-  async completeRecovery(request: Request, response: Response, next: NextFunction) {
+  async completeRecovery(request: Request, response: Response, _next: NextFunction) {
     try {
       const { token, password } = request.body;
       if (!token || !password) return response.render('recovery/store', { error: 'Please fill in again with your new password', success: null, token });
