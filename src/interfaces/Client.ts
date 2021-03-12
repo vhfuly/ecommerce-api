@@ -1,11 +1,15 @@
+import { UserInterface } from '@interfaces/User';
+import { StoreInterface } from './Store';
+import { Types } from 'mongoose';
+
 export interface ClientInterface {
-  user: string;
+  user: Types.ObjectId;
   name: string;
   birthDate: Date;
   cpf: string;
   phones: string;
   deleted: boolean;
-  store: string;
+  store: Types.ObjectId;
   address: Address;
 }
 

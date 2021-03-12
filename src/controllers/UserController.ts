@@ -24,8 +24,8 @@ class UserController {
   }
 
   async show(request: Request, response: Response, next: NextFunction) {
+    const { id } = request.params;
     try {
-      const { id } = request.params;
       const user: UserDocument = await User.findOne({ id: id });
       // .populate({ path: 'store'})
       if (!user) return response.status(401).json({ error: 'Unregistered user' });
@@ -43,10 +43,8 @@ class UserController {
   }
 
   async store(request: Request, response: Response, next: NextFunction) {
+    const { name, email, password, store } = request.body;
     try {
-      const {
-        name, email, password, store,
-      } = request.body;
       const { salt, hash } = setPassword(password);
       const account = await User.findOne({ email });
       if (account) return response.status(422).json({ error: 'The email already has an account' });
@@ -61,8 +59,8 @@ class UserController {
   }
 
   async update(request: Request, response: Response, next: NextFunction) {
+    const { name, email, password } = request.body;
     try {
-      const { name, email, password } = request.body;
       const user: UserDocument = await User.findById(request.headers.id);
       if (!user) return response.status(401).json({ error: 'Unregistered user' });
       if (typeof name !== 'undefined') user.name = name;
@@ -92,8 +90,8 @@ class UserController {
   }
 
   async login(request: Request, response: Response, next: NextFunction) {
+    const { email, password } = request.body;
     try {
-      const { email, password } = request.body;
       const user: UserDocument = await User.findOne({ email });
       if (!user) return response.status(401).json({ error: 'Unregistered user' });
       if (!validatePassword(password, user)) return response.status(401).json({ error: 'invalid password' });
@@ -110,8 +108,8 @@ class UserController {
   }
 
   async createRecovery(request: Request, response: Response, next: NextFunction) {
+    const { email } = request.body;
     try {
-      const { email } = request.body;
       if (!email) return response.render('src/recovery', { error: 'Fill in with your email', success: null });
       const user: UserDocument = await User.findOne({ email });
       if (!user) return response.render('recovery', { error: 'There is no user with this email', success: null });
@@ -135,8 +133,8 @@ class UserController {
   }
 
   async completeRecovery(request: Request, response: Response, next: NextFunction) {
+    const { token, password } = request.body;
     try {
-      const { token, password } = request.body;
       if (!token || !password) return response.render('recovery/store', { error: 'Please fill in again with your new password', success: null, token });
       const user: UserDocument = await User.findOne({ 'recovery.token': token });
       if (!user) return response.render('recovery', { error: 'Unidentified user', success: null });

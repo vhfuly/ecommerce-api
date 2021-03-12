@@ -27,7 +27,7 @@ const ClientSchema: Schema<ClientDocument, ClientModel> = new Schema({
   }
 },{ timestamps: true });
 
-ClientSchema.plugin(mongoosePaginate);
+// ClientSchema.plugin(mongoosePaginate);
 
 export interface ClientModel extends Model<ClientDocument> {}
 export default model<ClientDocument, ClientModel>('Client', ClientSchema)

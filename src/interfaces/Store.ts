@@ -1,4 +1,5 @@
 export interface StoreInterface {
+  readonly _id: string;
   name: string;
   email: string;
   cnpj: string;
