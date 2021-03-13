@@ -3,7 +3,9 @@ import uniqueValidator from 'mongoose-unique-validator';
 
 import { StoreInterface } from '@interfaces/Store';
 
-export interface StoreDocument extends StoreInterface, Document {}
+export interface StoreDocument extends StoreInterface, Document {
+  
+}
 
 const StoreSchema: Schema<StoreDocument, StoreModel> = new Schema({
   name: { type: String, required: true },
