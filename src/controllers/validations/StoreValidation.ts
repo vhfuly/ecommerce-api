@@ -31,7 +31,7 @@ const storeValidation = {
       name: Joi.string().required(),
       cnpj: Joi.string().length(18).required(),
       email: Joi.string().email().required(),
-      phones: Joi.array().items(Joi.string().required()),
+      phones: Joi.array().items(Joi.string()).required(),
       address: Joi.object({
         place: Joi.string().required(),
         number: Joi.string().required(),

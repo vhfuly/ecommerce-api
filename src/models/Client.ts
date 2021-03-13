@@ -2,7 +2,9 @@ import { Document, Schema, model, Model } from 'mongoose'
 import mongoosePaginate from 'mongoose-paginate';
 import { ClientInterface } from '@interfaces/Client';
 
-export interface ClientDocument extends ClientInterface, Document {}
+export interface ClientDocument extends ClientInterface, Document {
+  _doc: any;
+}
 
 const ClientSchema: Schema<ClientDocument, ClientModel> = new Schema({
   user: { type: Schema.Types.ObjectId, ref: "User", required: true},

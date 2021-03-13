@@ -14,7 +14,7 @@ class ClientController {
     const limit = Number(request.query.limit) || 30;
     try {
       const clients = await Client.find({store: String(store) })
-      .populate('user').skip(offset).limit(limit);
+      .populate({path: 'user', select: "-salt -hash"}).skip(offset).limit(limit);
       response.json(clients);
     } catch (error) {
       next(error);
@@ -36,7 +36,7 @@ class ClientController {
     const limit = Number(request.query.limit) || 30;
     try {
       const clients = await Client.find({  store: String(store) , name: { $regex: search }})
-        .populate('user').skip(offset).limit(limit);
+        .populate({path: 'user', select: "-salt -hash"}).skip(offset).limit(limit);
       response.json(clients);
     } catch (error) {
       next(error);
@@ -48,7 +48,7 @@ class ClientController {
     const { store } = request.query;
     try {
       const client = await Client.findOne({ store: String(store), _id: id })
-        .populate('user');
+      .populate({path: 'user', select: "-salt -hash"});
       response.json(client);
     } catch (error) {
       next(error);
@@ -59,7 +59,8 @@ class ClientController {
     const { name, cpf,  email, phones, address, birthDate} = request.body;
     const { id } = request.params;
     try {
-      const client = await Client.findById(id).populate('user')
+      const client = await Client.findById(id)
+        .populate({path: 'user', select: "-salt -hash"});
       const user = await User.findById(client.user)
       if (name) {
         user.name = name;
@@ -82,7 +83,8 @@ class ClientController {
   async show(request: Request, response: Response , next: NextFunction) {
     const { store } = request.query;
     try {
-      const client = await (await Client.findOne ({user: String(request.headers.id), store: String(store) })).populated('user');
+      const client = await Client.findOne({user: String(request.headers.id), store: String(store) })
+        .populate({path: 'user', select: "-salt -hash"});
       response.json(client)
     } catch (error) {
       next(error)
@@ -101,7 +103,7 @@ class ClientController {
       const client = new Client({ name, cpf, phones, address, store, birthDate, user: user._id});
       await user.save();
       await client.save();
-      response.json({...client, email});
+      response.json({client: client._doc, email: email});
     } catch (error) {
       next(error)
     }
@@ -111,7 +113,9 @@ class ClientController {
     const { name, cpf, email, phones, address, birthDate } = request.body;
     const { store } = request.query;
     try {
-      const client = await Client.findById(request.headers.id).populate('user')
+      const client = await Client.findOne({ user: String(request.headers.id)})
+        .populate('user').populate({path: 'user', select: "-salt -hash"});
+      if (!client) return response.json({error: 'Client does not exist'})
       const user = await User.findById(client.user)
       if (name) {
         user.name = name;

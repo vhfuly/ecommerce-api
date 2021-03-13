@@ -1,18 +1,20 @@
-import JoiBase from 'joi';
+import Joi from 'joi';
 import Extension from '@joi/date';
 
-const Joi = JoiBase.extend(Extension)
+const JoiDate = Joi.extend(Extension);
 
 const clientValidation = {
   index: {
     query: Joi.object().keys({
       offset: Joi.number(),
       limit: Joi.number(),
+      store: Joi.string().alphanum().length(24).required(),
     }),
   },
 
   search : {
     query: Joi.object().keys({
+      store: Joi.string().alphanum().length(24).required(),
       offset: Joi.number(),
       limit: Joi.number(),
     }),
@@ -44,7 +46,7 @@ const clientValidation = {
         city: Joi.string().required(),
         district: Joi.string().required(),
       }).optional(),
-      birthDate: Joi.date().format('YYYY-MM-DD').raw().optional(),
+      birthDate: JoiDate.date().format('YYYY-MM-DD').optional(),
     }),
   },
 
@@ -63,7 +65,8 @@ const clientValidation = {
       password: Joi.string().required(),
       cpf: Joi.string().length(14).required(),
       email: Joi.string().email().required(),
-      phones: Joi.array().items(Joi.string().required()),
+      birthDate: JoiDate.date().format('YYYY-MM-DD').required(),
+      phones: Joi.array().items(Joi.string()).required(),
       address: Joi.object({
         place: Joi.string().required(),
         number: Joi.string().required(),
@@ -72,7 +75,6 @@ const clientValidation = {
         city: Joi.string().required(),
         district: Joi.string().required(),
       }).required(),
-      birthDate: Joi.date().format('YYYY-MM-DD').raw().required(),
     }),
   },
 
@@ -97,7 +99,7 @@ const clientValidation = {
         city: Joi.string().required(),
         district: Joi.string().required(),
       }).optional(),
-      birthDate: Joi.date().format('YYYY-MM-DD').raw().optional(),
+      birthDate: JoiDate.date().format('YYYY-MM-DD').optional(),
     }),
   },
 
