@@ -1,5 +1,3 @@
-import { UserInterface } from '@interfaces/User';
-import { StoreInterface } from './Store';
 import { Types } from 'mongoose';
 
 export interface ClientInterface {

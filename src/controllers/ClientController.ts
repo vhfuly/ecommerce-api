@@ -3,9 +3,13 @@ import { Request, Response, NextFunction } from 'express';
 import Store from '@models/Store';
 import User from '@models/User';
 import Client from '@models/Client';
+import { setPassword } from 'src/utils/password';
+import { clientsRouter } from 'src/routes/api/v1/Clients';
 
 
 class ClientController {
+
+  //ADMIN
   async index(request: Request, response: Response , next: NextFunction) {
     const { store } = request.query;
     const offset = Number(request.query.offset) || 0;
@@ -54,7 +58,7 @@ class ClientController {
   }
 
   async updateAdmin(request: Request, response: Response , next: NextFunction) {
-    const { name, cpf,  email, phones, address, birthDate} =request.body;
+    const { name, cpf,  email, phones, address, birthDate} = request.body;
     const { id } = request.params;
     try {
       const client = await Client.findById(id).populate('user')
@@ -70,6 +74,74 @@ class ClientController {
       await user.save();
       await client.save();
       response.json(client)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  //CLIENT
+  async show(request: Request, response: Response , next: NextFunction) {
+    const { id } = request.headers.id;
+    const { store } = request.query;
+    try {
+      const client = await (await Client.findOne ({user: id, store: String(store) })).populated('user');
+      response.json(client)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async store(request: Request, response: Response , next: NextFunction) {
+    const { name, cpf,  email, phones, address, birthDate, password } = request.body;
+    const { store } = request.query;
+
+    try {
+      const user = new User({ name, email, store });
+      const { salt, hash } = setPassword(password);
+      user.salt = salt;
+      user.hash = hash;
+      const client = new Client({ name, cpf, phones, address, store, birthDate, user: user._id});
+      await user.save();
+      await client.save();
+      response.json({...client, email});
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async update(request: Request, response: Response , next: NextFunction) {
+    const { name, cpf,  email, phones, address, birthDate, password } = request.body;
+    const { store } = request.query;
+    const { id } = request.headers.id;
+
+    try {
+      const client = await Client.findById(id).populate('user')
+      const user = await User.findById(client.user)
+      if (name) {
+        user.name = name;
+        client.name = name;
+      }
+      if (email) user.email = email;
+      if (phones) client.phones = phones;
+      if (address) client.address = address;
+      if (birthDate) client.birthDate =birthDate
+      await user.save();
+      await client.save();
+      response.json(client)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async remove(request: Request, response: Response , next: NextFunction) {
+    const { id } = request.headers.id;
+    try {
+      const client = await Client.findOne({user: id}).populate('user');
+      const user = await User.findById(id);
+      await user.remove();
+      client.deleted = true;
+      await client.save();
+      response.json({ deleted: true })
     } catch (error) {
       next(error)
     }

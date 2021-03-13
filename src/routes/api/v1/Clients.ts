@@ -18,9 +18,9 @@ router.get('/admin/:id/purchase', auth.required, storeValidation.admin, clientCo
 router.put('/admin/:id', auth.required, storeValidation.admin, clientController.updateAdmin);
 
 //CLIENT
-// router.get('/:id', auth.required, clientController.show);
-// router.post('/', clientController.store);
-// router.put('/:id', auth.required, clientController.update);
-// router.delete('/:id', auth.required, clientController.remove);
+router.get('/:id', auth.required, clientController.show);
+router.post('/', clientController.store);
+router.put('/:id', auth.required, clientController.update);
+router.delete('/:id', auth.required, clientController.remove);
 
 export { router as clientsRouter }
