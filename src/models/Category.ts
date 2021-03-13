@@ -8,7 +8,7 @@ const CategorySchema: Schema<CategoryDocument, CategoryModel> = new Schema({
   code: { type: String, required: true },
   availability: { type: Boolean, default: true },
   products: { type: [{type: Schema.Types.ObjectId, ref:'product' }]},
-  Store: {type: Schema.Types.ObjectId, ref:'store' }, 
+  store: {type: Schema.Types.ObjectId, ref:'store' }, 
 },{ timestamps: true });
 
 export interface CategoryModel extends Model<CategoryDocument> {}

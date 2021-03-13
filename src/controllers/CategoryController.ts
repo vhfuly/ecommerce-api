@@ -38,7 +38,7 @@ class CategoryController {
 
   async store(request: Request, response: Response , next: NextFunction) {
     const { store } = request.query;
-    const { name, code } = request.query;
+    const { name, code } = request.body;
     try {
       const category = new Category({name, code , store, availability: true })
       await category.save();

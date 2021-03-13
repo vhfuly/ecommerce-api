@@ -14,7 +14,7 @@ router.get('/available', validate(categoryValidation.indexAvailable), categoryCo
 router.get('/:id', validate(categoryValidation.show), categoryController.show);
 
 router.post('/', auth.required, storeValidation.admin, validate(categoryValidation.store), categoryController.store);
-router.put('/', auth.required, storeValidation.admin, validate(categoryValidation.update), categoryController.update);
-router.delete('/', auth.required, storeValidation.admin, validate(categoryValidation.remove), categoryController.remove);
+router.put('/:id', auth.required, storeValidation.admin, validate(categoryValidation.update), categoryController.update);
+router.delete('/:id', auth.required, storeValidation.admin, validate(categoryValidation.remove), categoryController.remove);
 
 export { router as categoriesRouter }
