@@ -1,5 +1,4 @@
 import { Document, Schema, model, Model } from 'mongoose'
-import mongoosePaginate from 'mongoose-paginate';
 import { ClientInterface } from '@interfaces/Client';
 
 export interface ClientDocument extends ClientInterface, Document {
@@ -29,7 +28,6 @@ const ClientSchema: Schema<ClientDocument, ClientModel> = new Schema({
   }
 },{ timestamps: true });
 
-// ClientSchema.plugin(mongoosePaginate);
 
 export interface ClientModel extends Model<ClientDocument> {}
 export default model<ClientDocument, ClientModel>('Client', ClientSchema)

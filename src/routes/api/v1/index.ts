@@ -10,5 +10,6 @@ router.use('/users', usersRouter)
 router.use('/stores', storesRouter)
 router.use('/clients', clientsRouter)
 router.use('/categories', categoriesRouter)
+router.use('/products', productsRouter)
 
 export { router as routerApi }
