@@ -6,7 +6,7 @@
 - [x]  Stores
 - [x]  Validations (Store, User)
 - [x]  Clients
-- [ ]  Categories
+- [x]  Categories
 - [ ]  products
 - [ ]  assessments
 - [ ]  variations
