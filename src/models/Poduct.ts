@@ -1,4 +1,5 @@
 import { Document, Schema, model, Model } from 'mongoose';
+import { ProductInterface } from '@interfaces/Product';
 
 
 export interface ProductDocument extends ProductInterface, Document {}

@@ -5,5 +5,5 @@ export interface CategoryInterface {
   code: string;
   availability: boolean;
   products: Types.ObjectId[];
-  Store: Types.ObjectId,
+  store: Types.ObjectId,
 }
