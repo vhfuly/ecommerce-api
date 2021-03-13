@@ -1,10 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 
-import Store from '@models/Store';
 import User from '@models/User';
 import Client from '@models/Client';
 import { setPassword } from 'src/utils/password';
-import { clientsRouter } from 'src/routes/api/v1/Clients';
 
 
 class ClientController {
@@ -68,6 +66,7 @@ class ClientController {
         client.name = name;
       }
       if (email) user.email = email;
+      if (cpf) client.cpf = cpf;
       if (phones) client.phones = phones;
       if (address) client.address = address;
       if (birthDate) client.birthDate =birthDate
@@ -81,10 +80,9 @@ class ClientController {
 
   //CLIENT
   async show(request: Request, response: Response , next: NextFunction) {
-    const { id } = request.headers.id;
     const { store } = request.query;
     try {
-      const client = await (await Client.findOne ({user: id, store: String(store) })).populated('user');
+      const client = await (await Client.findOne ({user: String(request.headers.id), store: String(store) })).populated('user');
       response.json(client)
     } catch (error) {
       next(error)
@@ -110,12 +108,10 @@ class ClientController {
   }
 
   async update(request: Request, response: Response , next: NextFunction) {
-    const { name, cpf,  email, phones, address, birthDate, password } = request.body;
+    const { name, cpf, email, phones, address, birthDate } = request.body;
     const { store } = request.query;
-    const { id } = request.headers.id;
-
     try {
-      const client = await Client.findById(id).populate('user')
+      const client = await Client.findById(request.headers.id).populate('user')
       const user = await User.findById(client.user)
       if (name) {
         user.name = name;
@@ -123,6 +119,7 @@ class ClientController {
       }
       if (email) user.email = email;
       if (phones) client.phones = phones;
+      if (cpf) client.cpf = cpf;
       if (address) client.address = address;
       if (birthDate) client.birthDate =birthDate
       await user.save();
@@ -134,10 +131,9 @@ class ClientController {
   }
 
   async remove(request: Request, response: Response , next: NextFunction) {
-    const { id } = request.headers.id;
     try {
-      const client = await Client.findOne({user: id}).populate('user');
-      const user = await User.findById(id);
+      const client = await Client.findOne({user: String(request.headers.id)}).populate('user');
+      const user = await User.findById(request.headers.id);
       await user.remove();
       client.deleted = true;
       await client.save();
