@@ -9,12 +9,12 @@ import { categoryValidation } from '@validations/CategoryValidation';
 const categoryController = new CategoryController();
 const router = Router();
 
-router.get('/', categoryController.index);
-router.get('/available', categoryController.indexAvailable);
-router.get('/:id', categoryController.show);
+router.get('/', validate(categoryValidation.index), categoryController.index);
+router.get('/available', validate(categoryValidation.indexAvailable), categoryController.indexAvailable);
+router.get('/:id', validate(categoryValidation.show), categoryController.show);
 
-router.post('/', auth.required, storeValidation.admin, categoryController.store);
-router.put('/', auth.required, storeValidation.admin, categoryController.update);
-router.delete('/', auth.required, storeValidation.admin, categoryController.remove);
+router.post('/', auth.required, storeValidation.admin, validate(categoryValidation.store), categoryController.store);
+router.put('/', auth.required, storeValidation.admin, validate(categoryValidation.update), categoryController.update);
+router.delete('/', auth.required, storeValidation.admin, validate(categoryValidation.remove), categoryController.remove);
 
 export { router as categoriesRouter }

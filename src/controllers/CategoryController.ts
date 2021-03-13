@@ -49,7 +49,6 @@ class CategoryController {
   }
 
   async update(request: Request, response: Response , next: NextFunction) {
-    const { store } = request.query;
     const { id } = request.params
     const { name, code, availability, products } = request.body;
     try {
@@ -65,7 +64,7 @@ class CategoryController {
     }
   }
 
-  async delete(request: Request, response: Response , next: NextFunction) {
+  async remove(request: Request, response: Response , next: NextFunction) {
     const { id } = request.params
     try {
       const category = Category.findById(id);
