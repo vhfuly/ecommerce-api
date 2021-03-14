@@ -3,6 +3,7 @@ import { usersRouter } from './Users';
 import { storesRouter } from './Stores';
 import { clientsRouter } from './Clients';
 import { categoriesRouter } from './Categories';
+import { productsRouter } from './Products';
 
 const router = Router();
 

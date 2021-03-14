@@ -8,7 +8,7 @@ export interface ProductInterface {
   price: number
   sale: number;
   sku: string;
-  category:  Types.ObjectId;
+  category:  Types.ObjectId | string;
   store:  Types.ObjectId;
   assessments: Types.ObjectId[];
   variations: Types.ObjectId[];

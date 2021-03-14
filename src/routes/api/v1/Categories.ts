@@ -17,4 +17,8 @@ router.post('/', auth.required, storeValidation.admin, validate(categoryValidati
 router.put('/:id', auth.required, storeValidation.admin, validate(categoryValidation.update), categoryController.update);
 router.delete('/:id', auth.required, storeValidation.admin, validate(categoryValidation.remove), categoryController.remove);
 
+//Routes Products
+router.get('/:id/products', categoryController.showProducts);
+router.put('/:id/products', auth.required, storeValidation.admin, categoryController.updateProducts);
+
 export { router as categoriesRouter }
