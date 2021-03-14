@@ -132,12 +132,58 @@ class ProductController {
     const limit = Number(request.query.limit) || 30;
     try {
       const product = await Product.find({store: String(store) })
-       .skip(offset).limit(limit).sort(getSort(sortType));
+       .skip(offset).limit(limit).sort(getSort(String(sortType)));
       response.json(product);
     } catch (error) {
       next(error)
     }
   }
+
+  async indexAvailable(request: Request, response: Response , next: NextFunction) {
+    const { store, sortType } = request.query;
+    const offset = Number(request.query.offset) || 0;
+    const limit = Number(request.query.limit) || 30;
+    try {
+      const product = await Product.find({store: String(store), availability: true })
+       .skip(offset).limit(limit).sort(getSort(String(sortType)));
+      response.json(product);
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async search(request: Request, response: Response , next: NextFunction) {
+    const { store, sortType } = request.query;
+    const offset = Number(request.query.offset) || 0;
+    const limit = Number(request.query.limit) || 30;
+    const search = new RegExp(request.params.search, 'i');
+    try {
+      const product = await Product.find({
+        store: String(store),
+        $or:[
+          { title: { $regex:search }},
+          { description: { $regex:search }},
+          { sku: { $regex:search }},
+        ],
+      })
+       .skip(offset).limit(limit).sort(getSort(String(sortType)));
+      response.json(product);
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async show(request: Request, response: Response , next: NextFunction) {
+    const { id } = request.params;
+    try {
+      const product = await Product.findById(id)
+       .populate(['store', 'assessments', 'variations']);
+      response.json(product);
+    } catch (error) {
+      next(error)
+    }
+  }
+
 }
 
 export { ProductController }
