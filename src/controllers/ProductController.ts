@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 
 import Category from '@models/Category';
 import Product from '@models/Product';
+import Assessment from '@models/Assessment';
 
 const getSort = (sortType: string) => {
   switch(sortType) {
@@ -183,6 +184,17 @@ class ProductController {
       const product = await Product.findById(id)
        .populate(['store', 'assessments', 'variations']);
       response.json(product);
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  //Assessments
+  async showAssessments(request: Request, response: Response , next: NextFunction) {
+    const { id } = request.params;
+    try {
+      const assessments = await Assessment.find({product: id});
+      response.json(assessments);
     } catch (error) {
       next(error)
     }
