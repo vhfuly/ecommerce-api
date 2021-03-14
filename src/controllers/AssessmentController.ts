@@ -50,7 +50,8 @@ class AssessmentController {
     const { id } = request.params;
     try {
       const assessment = await Assessment.findById(id);
-      const product = await Product.findById(assessment.id);
+      if (!assessment) return response.json({error: 'Assessment not found!'});
+      const product = await Product.findById(assessment.product);
       if (!product) return response.json({error: 'Product not found!'});
       product.assessments = product.assessments.filter((item) => String(item) !== String(assessment._id));
 

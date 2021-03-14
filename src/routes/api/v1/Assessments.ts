@@ -16,8 +16,7 @@ router.get('/:id',validate(assessmentValidation.show), assessmentsController.sho
 router.post('/',validate(assessmentValidation.store), auth.required, assessmentsController.store);
 
 //ADMIN
-router.delete('/', auth.required,storeValidation.admin,
-  validate(assessmentValidation.remove), assessmentsController.remove);
+router.delete('/:id', auth.required, storeValidation.admin, validate(assessmentValidation.remove), assessmentsController.remove);
 
 
 export { router as assessmentsRouter }
