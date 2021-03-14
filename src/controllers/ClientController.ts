@@ -83,7 +83,7 @@ class ClientController {
   async show(request: Request, response: Response , next: NextFunction) {
     const { store } = request.query;
     try {
-      const client = await Client.findOne({user: String(request.headers.id), store: String(store) })
+      const client = await Client.findOne({user: String(request.payload.id), store: String(store) })
         .populate({path: 'user', select: "-salt -hash"});
       response.json(client)
     } catch (error) {
@@ -113,7 +113,7 @@ class ClientController {
     const { name, cpf, email, phones, address, birthDate } = request.body;
     const { store } = request.query;
     try {
-      const client = await Client.findOne({ user: String(request.headers.id)})
+      const client = await Client.findOne({ user: String(request.payload.id)})
         .populate('user').populate({path: 'user', select: "-salt -hash"});
       if (!client) return response.json({error: 'Client does not exist'})
       const user = await User.findById(client.user)
@@ -136,8 +136,8 @@ class ClientController {
 
   async remove(request: Request, response: Response , next: NextFunction) {
     try {
-      const client = await Client.findOne({user: String(request.headers.id)}).populate('user');
-      const user = await User.findById(request.headers.id);
+      const client = await Client.findOne({user: String(request.payload.id)}).populate('user');
+      const user = await User.findById(request.payload.id);
       await user.remove();
       client.deleted = true;
       await client.save();

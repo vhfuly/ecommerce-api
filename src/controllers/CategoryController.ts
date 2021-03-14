@@ -7,7 +7,7 @@ class CategoryController {
   async index(request: Request, response: Response , next: NextFunction) {
     const { store } = request.query;
     try {
-      const categories = await Category.find({store: String(store) }, { _id: 0, products: 1, name: 1, code: 1, store: 1});
+      const categories = await Category.find({store: String(store) }, { _id: 1, products: 1, name: 1, code: 1, store: 1});
       response.json(categories);
     } catch (error) {
       next(error);
@@ -17,7 +17,7 @@ class CategoryController {
   async indexAvailable(request: Request, response: Response , next: NextFunction) {
     const { store } = request.query;
     try {
-      const categories = await Category.find({store: String(store), availability: true}, { _id: 0, products: 1, name: 1, code: 1, store: 1});
+      const categories = await Category.find({store: String(store), availability: true}, { _id: 1, products: 1, name: 1, code: 1, store: 1});
       response.json(categories);
     } catch (error) {
       next(error);
@@ -29,7 +29,7 @@ class CategoryController {
     const { id } = request.params;
     try {
       const category = await Category
-        .findOne({store: String(store), _id: id}, { _id: 0, products: 1, name: 1, code: 1, store: 1})
+        .findOne({store: String(store), _id: id}, { _id: 1, products: 1, name: 1, code: 1, store: 1})
         .populate(['products']);
       response.json(category);
     } catch (error) {
@@ -93,8 +93,6 @@ class CategoryController {
   async updateProducts(request: Request, response: Response , next: NextFunction) {
     const { id } = request.params;
     const { products } = request.body;
-    const offset = Number(request.query.offset) || 0;
-    const limit = Number(request.query.limit) || 30;
     try { 
       const category = await Category.findById(id);
       if (products) category.products = products;

@@ -47,6 +47,24 @@ const categoryValidation = {
     }),
   },
 
+  showProducts: {
+    params: Joi.object().keys({
+      id: Joi.string().alphanum().length(24).required(),
+    }),
+    query: Joi.object().keys({
+      limit: Joi.number(),
+      offset: Joi.number(),
+    }),
+  },
+
+  updateProducts: {
+    params: Joi.object().keys({
+      id: Joi.string().alphanum().length(24).required(),
+    }),
+    body: Joi.object().keys({
+      products: Joi.array().items(Joi.string().alphanum().length(24).required()).optional,
+    }),
+  },
 
 }
 

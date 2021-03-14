@@ -5,11 +5,11 @@ import User from '@models/User';
 
 const storeValidation = { 
   admin: async (request: Request, response: Response , next: NextFunction) => {
-    if(!request.headers.id) return response.sendStatus(401);
+    if(!request.payload.id) return response.sendStatus(401);
     const { store } = request.query;
     if(!store) return response.sendStatus(401);
     try {
-      const user = await User.findById(request.headers.id);
+      const user = await User.findById(request.payload.id);
       if(!user) return response.sendStatus(401);
       if(!user.store) return response.sendStatus(401);
       if(!user.permission.indexOf('admin')) return response.sendStatus(401);

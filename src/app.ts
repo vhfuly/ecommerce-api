@@ -14,8 +14,8 @@ app.use(express.json());
 const isProduction = process.env.NODE_ENV === 'production';
 const PORT = process.env.PORT || 3000;
 
-app.use('/public', express.static(`${__dirname}src/public`));
-app.use('/public/images', express.static(`${__dirname}src/public/images`));
+app.use('/public', express.static(__dirname + 'src/public'));
+app.use('/public/images', express.static(__dirname+'src/public/images'));
 
 const dbURI = isProduction ? dbs.dbProduction : dbs.dbTest;
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })

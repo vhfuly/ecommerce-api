@@ -87,6 +87,10 @@ class ProductController {
     }
   }
 
+  async images(request: Request, response: Response , next: NextFunction) {
+    console.log(typeof request.files)
+  }
+
   async updateImages(request: Request, response: Response , next: NextFunction) {
     const { store } = request.query;
     const { id } = request.params;
@@ -94,7 +98,7 @@ class ProductController {
     try {
       const product = await Product.findOne({ _id: id, store: String(store) });
       if(!product) return response.status(400).json({ error: 'Product not found'});
-
+      console.log(request.files)
       const newImages = files.map((item: Express.Multer.File) => item.filename);
       product.photos = product.photos.filter((item: string) => item).concat(newImages);
 
@@ -133,7 +137,7 @@ class ProductController {
     try {
       const product = await Product.find({store: String(store) })
        .skip(offset).limit(limit).sort(getSort(String(sortType)));
-      response.json(product);
+      response.json({product, offset, limit, total: product.length });
     } catch (error) {
       next(error)
     }
@@ -146,7 +150,7 @@ class ProductController {
     try {
       const product = await Product.find({store: String(store), availability: true })
        .skip(offset).limit(limit).sort(getSort(String(sortType)));
-      response.json(product);
+      response.json({product, offset, limit, total: product.length });
     } catch (error) {
       next(error)
     }
@@ -167,7 +171,7 @@ class ProductController {
         ],
       })
        .skip(offset).limit(limit).sort(getSort(String(sortType)));
-      response.json(product);
+      response.json({product, offset, limit, total: product.length });
     } catch (error) {
       next(error)
     }

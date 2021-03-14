@@ -13,9 +13,9 @@ import {
 } from '../utils/password';
 
 class UserController {
-  async index(request: Request, response: Response, next: NextFunction) {
+  async index(request: Request , response: Response, next: NextFunction) {
     try {
-      const user: UserDocument = await User.findById(request.headers.id);
+      const user: UserDocument = await User.findById(request.payload.id);
       if (!user) return response.status(401).json({ error: 'Unregistered user' });
       return response.json({ user: sendAuthJSON(user) });
     } catch (error) {
@@ -26,7 +26,7 @@ class UserController {
   async show(request: Request, response: Response, next: NextFunction) {
     const { id } = request.params;
     try {
-      const user: UserDocument = await User.findOne({ id: id });
+      const user: UserDocument = await User.findById(id);
       // .populate({ path: 'store'})
       if (!user) return response.status(401).json({ error: 'Unregistered user' });
       return response.json({
@@ -61,7 +61,7 @@ class UserController {
   async update(request: Request, response: Response, next: NextFunction) {
     const { name, email, password } = request.body;
     try {
-      const user: UserDocument = await User.findById(request.headers.id);
+      const user: UserDocument = await User.findById(request.payload.id);
       if (!user) return response.status(401).json({ error: 'Unregistered user' });
       if (typeof name !== 'undefined') user.name = name;
       if (typeof email !== 'undefined') user.email = email;
@@ -80,7 +80,7 @@ class UserController {
 
   async remove(request: Request, response: Response, next: NextFunction) {
     try {
-      const user: UserDocument = await User.findById(request.headers.id);
+      const user: UserDocument = await User.findById(request.payload.id);
       if (!user) return response.status(401).json({ error: 'Unregistered user' });
       await user.remove();
       return response.json({ deleted: true });
