@@ -75,6 +75,12 @@ const productValidation = {
       id: Joi.string().alphanum().length(24).required(),
     }),
   },
+
+  showAssessments: {
+    params: Joi.object().keys({
+      id: Joi.string().alphanum().length(24).required(),
+    }),
+  },
 };
 
 export { productValidation };

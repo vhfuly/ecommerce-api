@@ -1,9 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 
+
 import Assessment from '@models/Assessment';
 import Product from '@models/Product';
 
-class CategoryController {
+class AssessmentController {
 
   //client
   async index(request: Request, response: Response , next: NextFunction) {
@@ -46,9 +47,7 @@ class CategoryController {
 
   //ADMIN
   async remove(request: Request, response: Response , next: NextFunction) {
-    const { store, product } = request.query;
     const { id } = request.params;
-    const { name, text, punctuation } =request.body;
     try {
       const assessment = await Assessment.findById(id);
       const product = await Product.findById(assessment.id);
@@ -63,4 +62,5 @@ class CategoryController {
     }
   }
 }
-export { CategoryController  }
+
+export { AssessmentController }
