@@ -8,7 +8,7 @@
 - [x]  Clients
 - [x]  Categories
 - [X]  products
-- [ ]  assessments
+- [x]  assessments
 - [ ]  variations
 - [ ]  requests
 - [ ]  correios
