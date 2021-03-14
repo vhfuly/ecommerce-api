@@ -3,6 +3,21 @@ import { Request, Response, NextFunction } from 'express';
 import Category from '@models/Category';
 import Product from '@models/Product';
 
+const getSort = (sortType: string) => {
+  switch(sortType) {
+    case 'alphabetic_a-z':
+      return { title: 1 };
+    case 'alphabetic_z-a':
+      return { title: -1 };
+    case 'price_low–high':
+      return { price: 1 };
+    case 'price_high–low':
+      return { price: -1 };
+    default: 
+      return {};
+  }
+}
+
 class ProductController {
   //ADMIN
   async store(request: Request, response: Response , next: NextFunction) {
@@ -107,6 +122,20 @@ class ProductController {
       response.json({ deleted: true });
     } catch (error) {
       next(error);
+    }
+  }
+
+  //CLIENT
+  async index(request: Request, response: Response , next: NextFunction) {
+    const { store, sortType } = request.query;
+    const offset = Number(request.query.offset) || 0;
+    const limit = Number(request.query.limit) || 30;
+    try {
+      const product = await Product.find({store: String(store) })
+       .skip(offset).limit(limit).sort(getSort(sortType));
+      response.json(product);
+    } catch (error) {
+      next(error)
     }
   }
 }
