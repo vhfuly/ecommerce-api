@@ -1,5 +1,5 @@
 import { Document, Schema, model, Model } from 'mongoose';
-
+import { AssessmentInterface } from '@interfaces/Assessment';
 
 export interface AssessmentDocument extends AssessmentInterface, Document {}
 

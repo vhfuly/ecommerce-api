@@ -30,4 +30,6 @@ router.get('/:id', validate(productValidation.show), productController.show);
 
 // ASSESSMENTS
 
+router.get('/:id/assessments', productController.showAssessments)
+
 export { router as productsRouter }
