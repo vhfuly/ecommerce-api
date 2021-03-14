@@ -84,7 +84,7 @@ class CategoryController {
     try { 
       const product = await Product.find({ category: id })
         .skip(offset).limit(limit);
-      response.json(product);
+      response.json({product, offset, limit , total:product.length });
     } catch (error) {
       next(error);
     }

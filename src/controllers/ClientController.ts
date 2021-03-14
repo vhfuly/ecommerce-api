@@ -15,7 +15,7 @@ class ClientController {
     try {
       const clients = await Client.find({store: String(store) })
       .populate({path: 'user', select: "-salt -hash"}).skip(offset).limit(limit);
-      response.json(clients);
+      response.json({clients, offset, limit , total:clients.length});
     } catch (error) {
       next(error);
     }
@@ -37,7 +37,7 @@ class ClientController {
     try {
       const clients = await Client.find({  store: String(store) , name: { $regex: search }})
         .populate({path: 'user', select: "-salt -hash"}).skip(offset).limit(limit);
-      response.json(clients);
+      response.json({clients, offset, limit , total:clients.length});
     } catch (error) {
       next(error);
     }
