@@ -21,5 +21,7 @@ router.put('/images/:id', auth.required, storeValidation.admin,upload.array('fil
   validate(variationValidation.updateImages), variationController.updateImages);
 router.delete('/:id', auth.required, storeValidation.admin, validate(variationValidation.remove),
   variationController.remove);
+router.delete('/:id/image', auth.required, storeValidation.admin,validate(variationValidation.removeImage),
+  variationController.removeImage);
 
 export { router as variationsRouter }

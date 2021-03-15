@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import fs from 'fs';
 
 import Product from '@models/Product';
 import Variation from '@models/Variation';
@@ -77,6 +78,23 @@ class VariationController {
 
       const newImages = files.map((item: Express.Multer.File) => item.filename);
       variation.photos = variation.photos.filter((item: string) => item).concat(newImages);
+
+      await variation.save();
+      response.json(variation);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async removeImage(request: Request, response: Response, next: NextFunction) {
+    const { store, product, file } =request.query;
+    const { id } =request.params;
+    try {
+      const variation = await Variation.findOne({ _id: id, store: String(store), product: String(product) });
+      if (!variation) return response.status(400).json({ error: 'Variation not found!'});
+      const filePath = `${__dirname}/../public/images/${file}`;
+      variation.photos = variation.photos.filter((item: string) => item.toString() !== file.toString());
+      fs.unlinkSync(filePath);
 
       await variation.save();
       response.json(variation);

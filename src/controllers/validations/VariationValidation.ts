@@ -78,6 +78,17 @@ const variationValidation = {
     }),
   },
 
+  removeImage: {
+    params: Joi.object().keys({
+      id: Joi.string().alphanum().length(24).required(),
+    }),
+    query: Joi.object().keys({
+      store: Joi.string().alphanum().length(24).required(),
+      product: Joi.string().alphanum().length(24).required(),
+      file: Joi.string().required(),
+    }),
+  },
+
   remove: {
     params: Joi.object().keys({
       id: Joi.string().alphanum().length(24).required(),
