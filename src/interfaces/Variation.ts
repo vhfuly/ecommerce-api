@@ -19,4 +19,5 @@ export interface VariationInterface {
   amount: number;
   product: Types.ObjectId;
   store: Types.ObjectId;
+  availability?: boolean,
 }

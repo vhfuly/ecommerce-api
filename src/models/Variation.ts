@@ -24,6 +24,7 @@ const VariationSchema: Schema<VariationDocument, VariationModel> = new Schema({
     }
   },
   amount: { type: Number, default: 0 },
+  availability: { type: Boolean, default: true },
   product: {type: Schema.Types.ObjectId, ref:'Product', required: true }, 
   store: {type: Schema.Types.ObjectId, ref:'Store', required: true }, 
 },{ timestamps: true });

@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 import Category from '@models/Category';
 import Product from '@models/Product';
 import Assessment from '@models/Assessment';
+import Variation from '@models/Variation';
 
 const getSort = (sortType: string) => {
   switch(sortType) {
@@ -99,7 +100,7 @@ class ProductController {
     try {
       const product = await Product.findOne({ _id: id, store: String(store) });
       if(!product) return response.status(400).json({ error: 'Product not found'});
-      console.log(request.files)
+  
       const newImages = files.map((item: Express.Multer.File) => item.filename);
       product.photos = product.photos.filter((item: string) => item).concat(newImages);
 
@@ -195,6 +196,16 @@ class ProductController {
     try {
       const assessments = await Assessment.find({product: id});
       response.json(assessments);
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async showVariations(request: Request, response: Response , next: NextFunction) {
+    const { id } = request.params;
+    try {
+      const variation = await Variation.find({product: id});
+      response.json(variation);
     } catch (error) {
       next(error)
     }
