@@ -58,7 +58,7 @@ class VariationController {
       if (price) variation.price = price;
       if (sale) variation.sale = sale;
       if (delivery) variation.delivery = delivery;
-      if (amount) variation.code = amount;
+      if (amount) variation.amount = amount;
       
       await variation.save();
       response.json(variation);
