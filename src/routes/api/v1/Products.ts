@@ -27,6 +27,7 @@ router.get('/search/:search', validate(productValidation.search), productControl
 router.get('/:id', validate(productValidation.show), productController.show);
 
 // VARIATIONS
+router.get('/:id/variations', validate(productValidation.showVariations), productController.showVariations)
 
 // ASSESSMENTS
 
