@@ -19,6 +19,8 @@ router.put('/:id', auth.required, storeValidation.admin,
 router.put('/images/:id', auth.required, storeValidation.admin,upload.array('files', 4), validate(productValidation.updateImages), productController.updateImages);
 router.delete('/:id', auth.required, storeValidation.admin,
   validate(productValidation.remove), productController.remove);
+router.delete('/:id/image', auth.required, storeValidation.admin,validate(productValidation.removeImage),
+  productController.removeImage);
 
 // CLIENTS
 router.get('/', validate(productValidation.index), productController.index);

@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import fs from 'fs';
 
 import Category from '@models/Category';
 import Product from '@models/Product';
@@ -109,6 +110,23 @@ class ProductController {
       return response.json(product);
     } catch (error) {
       next(error)
+    }
+  }
+
+  async removeImage(request: Request, response: Response, next: NextFunction) {
+    const { store, product, file } =request.query;
+    const { id } =request.params;
+    try {
+      const product = await Product.findOne({ _id: id, store: String(store) });
+      if(!product) return response.status(400).json({ error: 'Product not found'});
+      const filePath = `${__dirname}/../public/images/${file}`;
+      product.photos = product.photos.filter((item: string) => item.toString() !== file.toString());
+      fs.unlinkSync(filePath);
+
+      await product.save();
+      response.json(product);
+    } catch (error) {
+      next(error);
     }
   }
 
