@@ -1,4 +1,3 @@
-import { Request, Response, NextFunction } from 'express';
 import Joi from 'joi';
 
 const productValidation = { 
@@ -77,6 +76,12 @@ const productValidation = {
   },
 
   showAssessments: {
+    params: Joi.object().keys({
+      id: Joi.string().alphanum().length(24).required(),
+    }),
+  },
+
+  showVariations: {
     params: Joi.object().keys({
       id: Joi.string().alphanum().length(24).required(),
     }),

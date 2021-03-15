@@ -105,5 +105,4 @@ class VariationController {
   }
 }
 
-
 export { VariationController }
