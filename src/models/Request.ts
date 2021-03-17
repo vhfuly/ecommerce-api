@@ -1,4 +1,5 @@
 import { Document, Schema, model, Model } from 'mongoose';
+import { RequestInterface } from '@interfaces/Request';
 
 export interface RequestDocument extends RequestInterface, Document {}
 
