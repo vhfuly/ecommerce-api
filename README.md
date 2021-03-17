@@ -9,7 +9,7 @@
 - [x]  Categories
 - [X]  products
 - [x]  assessments
-- [ ]  variations
+- [x]  variations
 - [ ]  purchases
 - [ ]  correios
 - [ ]  delivery
