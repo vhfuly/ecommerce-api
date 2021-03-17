@@ -16,7 +16,7 @@ router.get("/admin/:id", auth.required, storeValidation.admin, purchaseControlle
 router.delete("/admin/:id", auth.required, storeValidation.admin, purchaseController.removeAdmin);
 
 // ADMIN -- cart
-router.get("/admin/:id/cart", auth.required, storeValidation.admin, purchaseController.showCartRequestAdmin);
+router.get("/admin/:id/cart", auth.required, storeValidation.admin, purchaseController.showCartPurchaseAdmin);
 
 // CLIENT
 router.get("/", auth.required, purchaseController.index);
@@ -26,7 +26,7 @@ router.post("/", auth.required, purchaseController.store);
 router.delete("/:id", auth.required, purchaseController.remove);
 
 //  CLIENT -- cart
-router.get("/:id/cart", purchaseController.showCartRequest);
+router.get("/:id/cart", purchaseController.showCartPurchase);
 
 
 export { router as purchasesRouter }
