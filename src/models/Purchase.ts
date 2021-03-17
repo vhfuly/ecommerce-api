@@ -1,9 +1,9 @@
 import { Document, Schema, model, Model } from 'mongoose';
-import { RequestInterface } from '@interfaces/Request';
+import { PurchaseInterface } from '@interfaces/Purchase';
 
-export interface RequestDocument extends RequestInterface, Document {}
+export interface PurchaseDocument extends PurchaseInterface, Document {}
 
-const RequestSchema: Schema<RequestDocument, RequestModel> = new Schema({
+const PurchaseSchema: Schema<PurchaseDocument, PurchaseModel> = new Schema({
   client: {type: Schema.Types.ObjectId, ref:'Client', required: true },
   cart: {
     type: [{
@@ -21,5 +21,5 @@ const RequestSchema: Schema<RequestDocument, RequestModel> = new Schema({
 
 },{ timestamps: true });
 
-export interface RequestModel extends Model<RequestDocument> {}
-export default model<RequestDocument, RequestModel>('Request', RequestSchema);
+export interface PurchaseModel extends Model<PurchaseDocument> {}
+export default model<PurchaseDocument, PurchaseModel>('Purchase', PurchaseSchema);

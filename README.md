@@ -1,4 +1,4 @@
-<h1 align="center"> API Ecommerce </h1>
+<h1 align="center"> API E-commerce </h1>
 
 [TO-DO]
 
@@ -10,7 +10,7 @@
 - [X]  products
 - [x]  assessments
 - [ ]  variations
-- [ ]  requests
+- [ ]  purchases
 - [ ]  correios
 - [ ]  delivery
 - [ ]  pagseguro

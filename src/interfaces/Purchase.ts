@@ -8,7 +8,7 @@ interface Cart {
   unitPrice: number;
 }
 
-export interface RequestInterface {
+export interface PurchaseInterface {
   client: Types.ObjectId,
   cart: Cart[];
   payment: Types.ObjectId;
