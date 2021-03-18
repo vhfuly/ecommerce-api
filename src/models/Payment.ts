@@ -4,11 +4,9 @@ import { PaymentInterface } from '@interfaces/Payment';
 export interface PaymentDocument extends PaymentInterface, Document {}
 
 const PaymentSchema: Schema<PaymentDocument, PaymentModel> = new Schema({
-  status: { type: String, required: true },
-  trackingCode: { type: String },
+  value: { type: Number, required: true },
   type: { type: String, required: true },
-  cost: { type: Number, required: true },
-  deadline: { type: Number, required: true },
+  parceled: { type: Object },
   purchase: { type: Schema.Types.ObjectId, ref: "Purchase", required: true },
   store: { type: Schema.Types.ObjectId, ref: "store", required: true },
   payload: { type: Object }

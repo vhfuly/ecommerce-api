@@ -1,11 +1,9 @@
 import { Types } from 'mongoose';
 
 export interface PaymentInterface {
-  status: string;
-  trackingCode: string;
+  value: number;
   type: string;
-  cost: number;
-  deadline: number;
+  parceled: object;
   purchase: Types.ObjectId;
   store: Types.ObjectId;
   payload: object;
