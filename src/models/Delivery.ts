@@ -1,5 +1,5 @@
 import { Document, Schema, model, Model } from 'mongoose'
-import { ClientInterface } from '@interfaces/Client';
+import { DeliveryInterface } from '@interfaces/Delivery';
 
 export interface DeliveryDocument extends DeliveryInterface, Document {}
 
