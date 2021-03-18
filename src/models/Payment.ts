@@ -1,4 +1,5 @@
 import { Document, Schema, model, Model } from 'mongoose'
+import { PaymentInterface } from '@interfaces/Payment';
 
 export interface PaymentDocument extends PaymentInterface, Document {}
 
