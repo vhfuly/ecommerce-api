@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 
 import User from '@models/User';
 import Client from '@models/Client';
+import Purchase from '@models/Purchase';
 import { setPassword } from 'src/utils/password';
 
 
@@ -22,11 +23,34 @@ class ClientController {
   }
 
   async searchPurchase(request: Request, response: Response , next: NextFunction) {
-    return response.status(400).send({error: 'In development'});
+    const { store } = request.query;
+    const offset = Number(request.query.offset) || 0;
+    const limit = Number(request.query.limit) || 30;
+    try {
+      const search = new RegExp(request.params.search, "i");
+      const client = await Client.find({ store: String(store), name: {$regex: search}});
+      const purchase = await Purchase.find({store: String(store), client: client._id })
+      .skip(offset).limit(limit)
+      .populate(['client', 'payment', 'delivery', 'variation', 'product']);
+    return response.json({ purchase, offset, limit, total: purchase.length });
+    } catch (error) {
+      
+    }
   }
 
   async showPurchaseAdmin(request: Request, response: Response , next: NextFunction) {
-    return response.status(400).send({error: 'In development'});
+    const { store } = request.query;
+    const { id } = request.params;
+    const offset = Number(request.query.offset) || 0;
+    const limit = Number(request.query.limit) || 0;
+    try {
+      const purchases = await Purchase.find({store: String(store), client: id})
+        .skip(offset).limit(limit)
+        .populate(['client', 'payment', 'delivery', 'variation', 'product']);
+      return response.json({ purchases, offset, limit, total: purchases.length });
+    } catch (error) {
+      next(error);
+    }
   }
 
   async search(request: Request, response: Response , next: NextFunction) {
