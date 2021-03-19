@@ -1,12 +1,5 @@
 import { Types } from 'mongoose';
-
-interface Cart {
-  variation: Types.ObjectId;
-  product: Types.ObjectId;
-  staticProduct: string;
-  amount: number;
-  unitPrice: number;
-}
+import { Cart } from './Cart';
 
 export interface PurchaseInterface {
   client: Types.ObjectId,

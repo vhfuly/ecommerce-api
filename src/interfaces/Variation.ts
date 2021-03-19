@@ -4,7 +4,7 @@ import { Types } from 'mongoose';
 export interface VariationInterface {
   code: string;
   name: string;
-  price: string;
+  price: number;
   photos: Array<string>;
   sale: number;
   delivery: {

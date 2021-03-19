@@ -7,7 +7,7 @@ import Product from '@models/Product';
 import Delivery from '@models/Delivery';
 import Payment from '@models/Payment';
 import Variation from '@models/Variation';
-import { json } from 'body-parser';
+import { CartValidation } from './validations/CartValidation';
 
 class PurchaseController {
   //ADMIN
@@ -99,7 +99,7 @@ class PurchaseController {
     const { cart, payment, delivery} = request.body;
     const { store } = request.query;
     try {
-      // if(!await CartValidation(cart)) return response.status(422).json({ error: 'Invalid cart' });
+      if(!await CartValidation(cart)) return response.status(422).json({ error: 'Invalid cart' });
 
       // if(!await DeliveryValidation(cart, delivery)) return response.status(422).json({ error: 'Invalid data delivery' });
 
