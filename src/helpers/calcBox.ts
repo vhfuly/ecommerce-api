@@ -1,5 +1,5 @@
-const MIN_LARGURA = 11;
-const MAX_LARGURA = 105;
+const MIN_WIDTH = 11;
+const MAX_WIDTH= 105;
 
 const MIN_ALTURA = 2;
 const MAX_ALTURA = 105;
@@ -7,109 +7,119 @@ const MAX_ALTURA = 105;
 const MIN_COMPRIMENTO = 16;
 const MAX_COMPRIMENTO = 105;
 
-const MIN_SOMA_CLA = 29;
-const MAX_SOMA_CLA = 200;
+const MIN_SUM_CLA = 29;
+const MAX_SUM_CLA = 200;
 
-const orderCart = (cart = null) => {
+interface CartCorreios {
+  weightKg: number;
+  depthCm: number;
+  heightCm: number;
+  widthCm: number;
+  amount: number;
+  price: number;
+  areaCm?: number;
+}
+
+const orderCart = (cart: CartCorreios[]) => {
 	if(!Array.isArray(cart))  return cart;
 
 	let _cart = cart.map(item => {
-		let novaAltura = Math.min( item.alturaCm, item.profundidadeCm, item.larguraCm );
-		let novoComprimento = Math.max( item.alturaCm, item.profundidadeCm, item.larguraCm );
-		let _temp = [item.alturaCm, item.profundidadeCm, item.larguraCm].sort((a,b) => a < b);
-		item.larguraCm = _temp[1];
-		item.profundidadeCm = novoComprimento;
-		item.alturaCm = novaAltura;
-		item.areaCm = item.larguraCm * item.profundidadeCm;
+		let newHeight = Math.min( item.heightCm, item.depthCm, item.widthCm );
+		let newDepth = Math.max( item.heightCm, item.depthCm, item.widthCm );
+		let _temp = [item.heightCm, item.depthCm, item.widthCm ].sort((a,b) => a < b);
+		item.widthCm = _temp[1];
+		item.depthCm = newDepth;
+		item.heightCm = newHeight;
+		item.areaCm = item.widthCm * item.depthCm;
 		return item;
  	});
 	return _cart.sort((a,b) => a.areaCm < b.areaCm);
 };
 
-const calcBox = (_carrinho = null) => {
-	if(!Array.isArray(_carrinho)) return _carrinho;
+const calcBox = (cart: CartCorreios[]) => {
+	if(!Array.isArray(cart)) return cart;
 
-	let carrinho = orderCart(_carrinho);
+	let _cart = orderCart(cart);
 
 	const box = {
-		'altura': 0, 		 /* altura final da caixa */
-		'largura': 0, 	 /* largura */
-		'comprimento': 0,  /* ... */
-		'qtd_itens': 0, 	 /* qtd de itens dentro da caixa */
+		'height': 0, 		 /* altura final da caixa */
+		'width': 0, 	 /* largura */
+		'depth': 0,  /* ... */
+		'qty_items': 0, 	 /* qtd de itens dentro da caixa */
 		'message': null,   /* caso erro guarda mensagem */
-		'volume': 0, 		 /* capacidade total de armazenamento da caixa */
-		'volume_itens': 0, /* volume armazenado */
-		'volume_vazio': 0, /* volume livre */
-		'comprimento_remanescente': 0,
-		'largura_remanescente': 0,
-		'altura_remanescente': 0
+		'size': 0, 		 /* capacidade total de armazenamento da caixa */
+		'size_items': 0, /* volume armazenado */
+		'size_empty': 0, /* volume livre */
+		'remnant_depth': 0,
+		'remnant_width': 0,
+		'remnant_height': 0
 	};
 
-	if(carrinho.length === 0 ) return "Erro: Carrinho encontra-se vazio.";
+	if(_cart.length === 0 ) return "Erro: Carrinho encontra-se vazio.";
 
-	carrinho.forEach(item => {
+	_cart.forEach(item => {
 
-		box.qtd_itens+=1;
+		box.qty_items+=1;
 
-		box.volume_itens += item.alturaCm * item.profundidadeCm * item.larguraCm;
+		box.size_items += item.heightCm * item.widthCm * item.widthCm;
 
-		if( box.comprimento_remanescente >= item.profundidadeCm && box.largura_remanescente >= item.larguraCm ){
+		if( box.remnant_depth >= item.widthCm && box.remnant_width >= item.widthCm ){
 
-			if(item.alturaCm > box.altura_remanescente){
-				box.altura += item.alturaCm - box.altura_remanescente;
+			if(item.heightCm > box.remnant_height){
+				box.height += item.heightCm - box.remnant_height;
 			}
 
-			if(item.profundidadeCm > box.comprimento){
-				box.comprimento = item.profundidadeCm;
+			if(item.widthCm > box.depth){
+				box.depth = item.widthCm;
 			}
 
-			box.comprimento_remanescente = box.comprimento - item.profundidadeCm;
+			box.remnant_depth = box.depth - item.widthCm;
 
-			box.largura_remanescente = box.largura_remanescente - item.larguraCm;
+			box.remnant_width = box.remnant_width - item.widthCm;
 
-			box.altura_remanescente = item.alturaCm > box.altura_remanescente ? item.alturaCm : box.altura_remanescente;
+			box.remnant_height = item.heightCm > box.remnant_height ? item.heightCm : box.remnant_height;
 
 			return;
 		}
 
 		// passo (N-1) - altura e' a variavel que sempre incrementa independente de condicao ...
-		box.altura += item.alturaCm;
+		box.height += item.heightCm;
 
 		// passo N - verificando se item tem dimensoes maiores que a caixa...
-		if ( item.larguraCm > box.largura ) box.largura = item.larguraCm;
+		if ( item.widthCm > box.width ) box.width = item.widthCm;
 
-		if ( item.profundidadeCm > box.comprimento ) box.comprimento = item.profundidadeCm;
+		if ( item.widthCm > box.depth ) box.depth = item.widthCm;
 
 		// calculando volume remanescente...
-		box.comprimento_remanescente = box.comprimento;
-		box.largura_remanescente = box.largura - item.larguraCm;
-		box.altura_remanescente = item.alturaCm;
+		box.remnant_depth = box.depth;
+		box.remnant_width = box.width - item.widthCm;
+		box.remnant_height = item.heightCm;
 	});
 
 	// @opcional - calculando volume da caixa ...
-	box.volume = ( box.altura * box.largura * box.comprimento );
+	box.size = ( box.height * box.width * box.depth );
 
 	// @opcional - calculando volume vazio! Ar dentro da caixa!
-	box.volume_vazio = box.volume - box.volume_itens;
+	box.size_empty = box.size - box.size_items;
 
 	// checa se temos produtos e se conseguimos alcancar a dimensao minima ...
-	if( !carrinho.length === 0 ){
+	if( _cart.length !== 0 ){
 		// verificando se dimensoes minimas sao alcancadas ...
-		if( box.altura > 0 && box.altura < MIN_ALTURA ) box.altura = MIN_ALTURA ;
-		if( box.largura > 0 && box.largura < MIN_LARGURA ) box.largura = MIN_LARGURA ;
-		if( box.comprimento > 0 && box.comprimento < MIN_COMPRIMENTO ) box.comprimento = MIN_COMPRIMENTO ;
+		if( box.height > 0 && box.height < MIN_ALTURA ) box.height = MIN_ALTURA ;
+		if( box.width > 0 && box.width < MIN_WIDTH ) box.width = MIN_WIDTH ;
+		if( box.depth > 0 && box.depth < MIN_COMPRIMENTO ) box.depth = MIN_COMPRIMENTO ;
 	}
 
 	// verifica se as dimensoes nao ultrapassam valor maximo
-	if( box.altura > MAX_ALTURA ) box.message = "Erro: Altura maior que o permitido.";
-	if( box.largura > MAX_LARGURA ) box.message = "Erro: Largura maior que o permitido.";
-	if( box.comprimento > MAX_COMPRIMENTO ) box.message = "Erro: Comprimento maior que o permitido.";
+	if( box.height > MAX_ALTURA ) box.message = "Erro: Altura maior que o permitido.";
+	if( box.width > MAX_WIDTH ) box.message = "Erro: Largura maior que o permitido.";
+	if( box.depth > MAX_COMPRIMENTO ) box.message = "Erro: Comprimento maior que o permitido.";
 
 	// @nota - nao sei se e' uma regra, mas por via das duvidas esta ai
 	// Soma (C+L+A)	MIN 29 cm  e  MAX 200 cm
-	if( (box.comprimento+box.comprimento+box.comprimento) < MIN_SOMA_CLA ) box.message = "Erro: Soma dos valores C+L+A menor que o permitido.";
+	if( (box.depth+box.depth+box.depth) < MIN_SUM_CLA ) box.message = "Erro: Soma dos valores C+L+A menor que o permitido.";
 
-	if( (box.comprimento+box.comprimento+box.comprimento) > MAX_SOMA_CLA ) box.message = "Erro: Soma dos valores C+L+A maior que o permitido.";
+	if( (box.depth+box.depth+box.depth) > MAX_SUM_CLA ) box.message = "Erro: Soma dos valores C+L+A maior que o permitido.";
 
 	return box;
 }

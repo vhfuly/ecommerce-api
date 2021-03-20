@@ -128,9 +128,7 @@ class PurchaseController {
           return item;
         }));
       const records = await PurchasesRecord.find({purchase: purchase._id})
-      const result = await calculateShipping('28080095', purchase.cart)
-      // return response.json({purchase, records});
-      return response.json({result});
+      return response.json({purchase, records});
     } catch (error) {
       next(error);
     }

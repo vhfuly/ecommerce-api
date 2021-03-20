@@ -29,7 +29,6 @@ const calculateShipping = async ( zipCode: string, products: Cart[] ) => {
   const weightTotal = _products.reduce((all, item) => all + ( item.weightKg * item.amount ) , 0);
   const priceTotal = _products.reduce((all, item) => all + ( item.price * item.amount ) , 0);
   try {
-    console.log(priceTotal)
     const results = await Promise.all(
       config.nCdServico.split(',').map(async(service: string)=>{
         const result = await correios.calcPrecoPrazo({
