@@ -8,6 +8,7 @@ import Payment from '@models/Payment';
 import Variation from '@models/Variation';
 import { CartValidation } from './validations/CartValidation';
 import PurchasesRecord from '@models/PurchasesRecord';
+import { calculateShipping } from './integrations/correios';
 
 class PurchaseController {
   //ADMIN
@@ -127,7 +128,9 @@ class PurchaseController {
           return item;
         }));
       const records = await PurchasesRecord.find({purchase: purchase._id})
-      return response.json({purchase, records});
+      const result = await calculateShipping('28080095', purchase.cart)
+      // return response.json({purchase, records});
+      return response.json({result});
     } catch (error) {
       next(error);
     }
