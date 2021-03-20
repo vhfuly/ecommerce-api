@@ -3,6 +3,7 @@ import Joi from 'joi';
 const purchaseValidation = { 
   indexAdmin: {
     query: Joi.object().keys({
+      store: Joi.string().alphanum().length(24).required(),
       limit: Joi.number(),
       offset: Joi.number(),
     }),
@@ -59,6 +60,7 @@ const purchaseValidation = {
       delivery: Joi.object({
         cost: Joi.number().required(),
         deadline: Joi.number().required(),
+        type: Joi.string().required(),
       }).required(),
     }),
   },

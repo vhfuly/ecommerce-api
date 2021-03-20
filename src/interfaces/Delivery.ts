@@ -8,7 +8,7 @@ export interface DeliveryInterface {
   deadline: number;
   purchase: Types.ObjectId;
   store: Types.ObjectId;
-  address: Address;
+  // address: Address;
   payload: object;
 }
 

@@ -4,6 +4,8 @@ import User from '@models/User';
 import Client from '@models/Client';
 import Purchase from '@models/Purchase';
 import { setPassword } from 'src/utils/password';
+import Product from '@models/Product';
+import Variation from '@models/Variation';
 
 
 class ClientController {
@@ -28,11 +30,19 @@ class ClientController {
     const limit = Number(request.query.limit) || 30;
     try {
       const search = new RegExp(request.params.search, "i");
-      const client = await Client.find({ store: String(store), name: {$regex: search}});
-      const purchase = await Purchase.find({store: String(store), client: client._id })
+      const clients = await Client.find({ store: String(store), name: {$regex: search}});
+      let purchases = await Purchase.find({store: String(store), client: { $in: clients.map(item => item._id) }})
       .skip(offset).limit(limit)
-      .populate(['client', 'payment', 'delivery', 'variation', 'product']);
-    return response.json({ purchase, offset, limit, total: purchase.length });
+      .populate(['client', 'payment', 'delivery']);
+      purchases = await Promise.all(purchases.map(async (purchase) => {
+        purchase.cart = await Promise.all(purchase.cart.map(async (item) => {
+          item.product = await Product.findById(item.product);
+          item.variation= await Variation.findById(item.variation);
+          return item;
+        }));
+        return purchase;
+      }));
+    return response.json({ purchases, offset, limit, total: purchases.length });
     } catch (error) {
       
     }

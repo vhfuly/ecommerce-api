@@ -16,9 +16,17 @@ class PurchaseController {
     const offset = Number(request.query.offset) || 0;
     const limit = Number(request.query.limit) || 0;
     try {
-      const purchases = await Purchase.find({store: String(store) })
+      let purchases = await Purchase.find({store: String(store) })
         .skip(offset).limit(limit)
-        .populate(['client', 'payment', 'delivery', 'variation', 'product']);
+        .populate(['client', 'payment', 'delivery']);
+        purchases = await Promise.all(purchases.map(async (purchase) => {
+          purchase.cart = await Promise.all(purchase.cart.map(async (item) => {
+            item.product = await Product.findById(item.product);
+            item.variation= await Variation.findById(item.variation);
+            return item;
+          }));
+          return purchase;
+        }));
       return response.json({ purchases, offset, limit, total: purchases.length });
     } catch (error) {
       next(error);
@@ -30,7 +38,12 @@ class PurchaseController {
     const { id } = request.params;
     try {
       const purchase = await Purchase.findOne({ store: String(store), _id: id })
-        .populate(['client', 'payment', 'delivery', 'variation', 'product']);
+        .populate(['client', 'payment', 'delivery']);
+        purchase.cart = await Promise.all(purchase.cart.map(async (item) => {
+          item.product = await Product.findById(item.product);
+          item.variation= await Variation.findById(item.variation);
+          return item;
+        }));
       return response.json(purchase);
     } catch (error) {
       next(error);
@@ -47,7 +60,7 @@ class PurchaseController {
 
       //registro de atividade = pedido cancelado
       // enviar email para cliente e admin
-
+      await purchase.save();
       return response.json({ canceled: true });
     } catch (error) {
       next(error);
@@ -59,7 +72,13 @@ class PurchaseController {
     const { id } = request.params;
     try {
       const purchase = await Purchase.findOne({ store: String(store), _id: id })
-      return response.json({ cart: purchase.cart });
+      purchase.cart = await Promise.all(purchase.cart.map(async (item) => {
+        item.product = await Product.findById(item.product);
+        item.variation= await Variation.findById(item.variation);
+        return item;
+      }));
+
+      return response.json({cart: purchase.cart});
     } catch (error) {
       next(error);
     }
@@ -70,11 +89,20 @@ class PurchaseController {
     const offset = Number(request.query.offset) || 0;
     const limit = Number(request.query.limit) || 0;
     try {
+      console.log(request.payload)
       const client = await Client.findOne({user: request.payload.id});
       if (!client) return response.status(400).json({Error: 'Client not found'});
-      const purchases = await Purchase.find({store: String(store), client: client._id })
-        .skip(offset).limit(limit)
-        .populate(['client', 'payment', 'delivery', 'variation', 'product']);
+      let purchases = await Purchase.find({store: String(store), client: client._id })
+      .skip(offset).limit(limit)
+      .populate(['client', 'payment', 'delivery']);
+      purchases = await Promise.all(purchases.map(async (purchase) => {
+        purchase.cart = await Promise.all(purchase.cart.map(async (item) => {
+          item.product = await Product.findById(item.product);
+          item.variation= await Variation.findById(item.variation);
+          return item;
+        }));
+        return purchase;
+      }));
       return response.json({ purchases, offset, limit, total: purchases.length });
     } catch (error) {
       next(error);
@@ -87,7 +115,12 @@ class PurchaseController {
       const client = await Client.findOne({user: request.payload.id});
       if (!client) return response.status(400).json({Error: 'Client not found'});
       const purchase = await Purchase.findOne({ client: client._id, _id: id })
-        .populate(['client', 'payment', 'delivery', 'variation', 'product']);
+        .populate(['client', 'payment', 'delivery']);
+        purchase.cart = await Promise.all(purchase.cart.map(async (item) => {
+          item.product = await Product.findById(item.product);
+          item.variation= await Variation.findById(item.variation);
+          return item;
+        }));
       return response.json(purchase);
     } catch (error) {
       next(error);
@@ -119,6 +152,7 @@ class PurchaseController {
         status: 'not_started',
         cost: delivery.cost,
         deadline: delivery.deadline,
+        type: delivery.type,
         payload: delivery,
         store,
       });
@@ -140,7 +174,7 @@ class PurchaseController {
       //notificar via e-mail - client e admin
 
       response.json({
-        purchase: Object.assign({}, purchase, { delivery: newDelivery, payment: newPayment, client: client })
+        purchase: purchase, delivery: newDelivery, payment: newPayment, client: client,
       });
     } catch (error) {
       
@@ -159,7 +193,7 @@ class PurchaseController {
 
       //registro de atividade = pedido cancelado
       // enviar email para admin 
-
+      await purchase.save();
       return response.json({ canceled: true });
     } catch (error) {
       next(error);
@@ -172,6 +206,11 @@ class PurchaseController {
       const client = await Client.findOne({user: request.payload.id});
       if (!client) return response.status(400).json({Error: 'Client not found'});
       const purchase = await Purchase.findOne({ client: client._id, _id: id })
+      purchase.cart = await Promise.all(purchase.cart.map(async (item) => {
+        item.product = await Product.findById(item.product);
+        item.variation= await Variation.findById(item.variation);
+        return item;
+      }));
       return response.json({ cart: purchase.cart });
     } catch (error) {
       next(error);

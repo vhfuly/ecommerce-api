@@ -27,7 +27,7 @@ router.post("/", auth.required, validate(purchaseValidation.store), purchaseCont
 router.delete("/:id", auth.required, validate(purchaseValidation.remove), purchaseController.remove);
 
 //  CLIENT -- cart
-router.get("/:id/cart", validate(purchaseValidation.showCartPurchase), purchaseController.showCartPurchase);
+router.get("/:id/cart", auth.required, validate(purchaseValidation.showCartPurchase), purchaseController.showCartPurchase);
 
 
 export { router as purchasesRouter }
