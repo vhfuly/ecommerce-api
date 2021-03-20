@@ -7,6 +7,7 @@ import { productsRouter } from './Products';
 import { assessmentsRouter } from './Assessments';
 import { variationsRouter } from './Variations';
 import { purchasesRouter } from './Purchases';
+import { deliveriesRouter } from './Deliveries';
 
 const router = Router();
 
@@ -18,5 +19,6 @@ router.use('/products', productsRouter)
 router.use('/assessments', assessmentsRouter)
 router.use('/variations', variationsRouter)
 router.use('/purchases', purchasesRouter)
+router.use('/deliveries', deliveriesRouter)
 
 export { router as routerApi }
