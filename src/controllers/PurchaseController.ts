@@ -8,7 +8,6 @@ import Payment from '@models/Payment';
 import Variation from '@models/Variation';
 import { CartValidation } from './validations/CartValidation';
 import PurchasesRecord from '@models/PurchasesRecord';
-import { calculateShipping } from './integrations/correios';
 
 class PurchaseController {
   //ADMIN
