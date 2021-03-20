@@ -54,16 +54,14 @@ class DeliveryController {
   }
 
   async calculate(request: Request, response: Response , next: NextFunction) {
-    const { id } = request.params;
     const { zipCode, cart } = request.body;
-    const { store } = request.query;
     try {
-      const _cart: CartCorreios[] = await Promise.all(cart.map(async (item: Cart) => {
+      const cartCorreios: CartCorreios[] = await Promise.all(cart.map(async (item: Cart) => {
         item.product = await Product.findById(item.product);
         item.variation= await Variation.findById(item.variation);
         return item;
       }));
-      const results = await calculateShipping(zipCode, _cart)
+      const results = await calculateShipping(zipCode, cartCorreios)
       response.json(results);
     } catch (error) {
       next(error)
