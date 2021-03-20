@@ -1,13 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
 
 import Purchase from '@models/Purchase';
-import User from '@models/User';
 import Client from '@models/Client';
 import Product from '@models/Product';
 import Delivery from '@models/Delivery';
 import Payment from '@models/Payment';
 import Variation from '@models/Variation';
 import { CartValidation } from './validations/CartValidation';
+import PurchasesRecord from '@models/PurchasesRecord';
 
 class PurchaseController {
   //ADMIN
@@ -44,7 +44,8 @@ class PurchaseController {
           item.variation= await Variation.findById(item.variation);
           return item;
         }));
-      return response.json(purchase);
+      const record = await PurchasesRecord.find({purchase: purchase._id})
+      return response.json({purchase, record});
     } catch (error) {
       next(error);
     }
@@ -57,10 +58,14 @@ class PurchaseController {
       const purchase = await Purchase.findOne({ store: String(store), _id: id })
       if (!purchase) return response.status(400).json({Error: 'Purchase not found'});
       purchase.canceled = true;
-
-      //registro de atividade = pedido cancelado
       // enviar email para cliente e admin
+      const purchasesRecord = new PurchasesRecord({
+        purchase: purchase._id,
+        type: 'purchase',
+        status: 'purchase_canceled',
+      })
       await purchase.save();
+      await purchasesRecord.save();
       return response.json({ canceled: true });
     } catch (error) {
       next(error);
@@ -121,7 +126,8 @@ class PurchaseController {
           item.variation= await Variation.findById(item.variation);
           return item;
         }));
-      return response.json(purchase);
+      const record = await PurchasesRecord.find({purchase: purchase._id})
+      return response.json({purchase, record});
     } catch (error) {
       next(error);
     }
@@ -167,12 +173,17 @@ class PurchaseController {
       newDelivery.purchase = purchase._id;
       newPayment.purchase = purchase._id;
 
+      
+      //notificar via e-mail - client e admin
+      const purchasesRecord = new PurchasesRecord({
+        purchase: purchase._id,
+        type: 'purchase',
+        status: 'purchase_created',
+      })
       await purchase.save();
       await newDelivery.save();
       await newPayment.save();
-
-      //notificar via e-mail - client e admin
-
+      await purchasesRecord.save();
       response.json({
         purchase: purchase, delivery: newDelivery, payment: newPayment, client: client,
       });
@@ -190,10 +201,14 @@ class PurchaseController {
       const purchase = await Purchase.findOne({ client: client._id, _id: id })
       if (!purchase) return response.status(400).json({Error: 'Purchase not found'});
       purchase.canceled = true;
-
-      //registro de atividade = pedido cancelado
       // enviar email para admin 
+      const purchasesRecord = new PurchasesRecord({
+        purchase: purchase._id,
+        type: 'purchase',
+        status: 'purchase_canceled',
+      })
       await purchase.save();
+      await purchasesRecord.save();
       return response.json({ canceled: true });
     } catch (error) {
       next(error);
