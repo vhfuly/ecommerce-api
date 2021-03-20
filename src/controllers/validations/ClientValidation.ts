@@ -12,6 +12,17 @@ const clientValidation = {
     }),
   },
 
+  searchPurchase : {
+    query: Joi.object().keys({
+      store: Joi.string().alphanum().length(24).required(),
+      offset: Joi.number(),
+      limit: Joi.number(),
+    }),
+    params: Joi.object().keys({
+      search: Joi.string().required(),
+    }),
+  },
+
   search : {
     query: Joi.object().keys({
       store: Joi.string().alphanum().length(24).required(),
@@ -23,6 +34,17 @@ const clientValidation = {
     }),
   },
 
+  showPurchaseAdmin : {
+    params: Joi.object().keys({
+      id: Joi.string().alphanum().length(24).required(),
+    }),
+    query: Joi.object().keys({
+      store: Joi.string().alphanum().length(24).required(),
+      offset: Joi.number(),
+      limit: Joi.number(),
+    }),
+  },
+  
   showAdmin: {
     params: Joi.object().keys({
       id: Joi.string().alphanum().length(24).required(),

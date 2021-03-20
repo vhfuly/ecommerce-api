@@ -10,10 +10,10 @@ const router = Router();
 
 //ADMIN
 router.get('/', auth.required, storeValidation.admin, validate(clientValidation.index), clientController.index);
-router.get('/search/:search/purchase', auth.required, storeValidation.admin, clientController.searchPurchase);
+router.get('/search/:search/purchase', auth.required, storeValidation.admin, validate(clientValidation.searchPurchase), clientController.searchPurchase);
 router.get('/search/:search', auth.required, storeValidation.admin, validate(clientValidation.search), clientController.search);
 router.get('/admin/:id', auth.required, storeValidation.admin, validate(clientValidation.showAdmin), clientController.showAdmin);
-router.get('/admin/:id/purchase', auth.required, storeValidation.admin, clientController.showPurchaseAdmin);
+router.get('/admin/:id/purchase', auth.required, storeValidation.admin,validate(clientValidation.showPurchaseAdmin), clientController.showPurchaseAdmin);
 
 router.put('/admin/:id', auth.required, storeValidation.admin, validate(clientValidation.updateAdmin), clientController.updateAdmin);
 
