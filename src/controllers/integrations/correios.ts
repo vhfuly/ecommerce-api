@@ -43,7 +43,7 @@ const calculateShipping = async ( zipCode: string, products: Cart[] ) => {
         nVlDiamentro: 0,
         nVlValorDeclarado: priceTotal < 19.5 ? 19.5 : priceTotal
       });
-      return {...result};
+      return {...result[0]};
     }));
     return results;
   } catch (error) {

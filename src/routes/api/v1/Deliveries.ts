@@ -10,6 +10,6 @@ const router = Router();
 
 router.get('/:id', auth.required, validate(deliveryValidation.show), deliveryController.show);
 router.put('/:id', auth.required, storeValidation.admin, validate(deliveryValidation.update), deliveryController.update);
-router.post('/:id', validate(deliveryValidation.calculate), deliveryController.calculate);
+router.post('/calculate', validate(deliveryValidation.calculate), deliveryController.calculate);
 
 export { router as deliveriesRouter }

@@ -1,5 +1,3 @@
-import config from "."
-
 const config = {
   // nCdEmpresa: "",
   // sDsSenha :"",
