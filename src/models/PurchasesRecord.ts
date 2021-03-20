@@ -1,5 +1,5 @@
 import { Document, Schema, model, Model } from 'mongoose';
-import { PurchaseInterface } from '@interfaces/Purchase';
+import { PurchasesRecordInterface } from '@interfaces/PurchasesRecord';
 
 export interface PurchasesRecordDocument extends PurchasesRecordInterface, Document {}
 
