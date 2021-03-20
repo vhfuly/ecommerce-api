@@ -44,8 +44,8 @@ class PurchaseController {
           item.variation= await Variation.findById(item.variation);
           return item;
         }));
-      const record = await PurchasesRecord.find({purchase: purchase._id})
-      return response.json({purchase, record});
+      const records = await PurchasesRecord.find({purchase: purchase._id})
+      return response.json({purchase, records});
     } catch (error) {
       next(error);
     }
@@ -126,8 +126,8 @@ class PurchaseController {
           item.variation= await Variation.findById(item.variation);
           return item;
         }));
-      const record = await PurchasesRecord.find({purchase: purchase._id})
-      return response.json({purchase, record});
+      const records = await PurchasesRecord.find({purchase: purchase._id})
+      return response.json({purchase, records});
     } catch (error) {
       next(error);
     }

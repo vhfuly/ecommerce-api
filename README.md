@@ -10,7 +10,7 @@
 - [X]  products
 - [x]  assessments
 - [x]  variations
-- [ ]  purchases
+- [X]  purchases
 - [ ]  correios
 - [ ]  delivery
 - [ ]  pagseguro
