@@ -47,7 +47,7 @@ const deliveryValidation = {
     }),
   },
 
-  checkValueAndDeadline: async(zipCode: string, cart: any , delivery: DeliveryInterface) => {
+  checkValueAndDeadline: async(zipCode: string, cart: any, delivery: DeliveryInterface) => {
     try {
       const _cart: CartCorreios[] = await Promise.all(cart.map(async (item: Cart) => {
         item.product = await Product.findById(item.product);

@@ -2,7 +2,6 @@ import { Request, Response, NextFunction } from 'express';
 
 import Delivery from '@models/Delivery';
 import PurchasesRecord from '@models/PurchasesRecord';
-import { clearTimeout } from 'timers';
 import { Cart } from '@interfaces/Cart';
 import Product, { ProductDocument } from '@models/Product';
 import Variation, { VariationDocument } from '@models/Variation';

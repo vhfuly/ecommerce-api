@@ -1,7 +1,6 @@
 import Correios from 'node-correios';
 import { config } from '@config/correios';
 
-import { VariationInterface } from '@interfaces/Variation';
 import { calcBox } from '../../helpers/calcBox';
 import { VariationDocument } from '@models/Variation';
 import { ProductDocument } from '@models/Product';
@@ -43,6 +42,7 @@ const calculateShipping = async ( zipCode: string, products: Cart[] ) => {
         nVlDiamentro: 0,
         nVlValorDeclarado: priceTotal < 19.5 ? 19.5 : priceTotal
       });
+      console.log(result)
       return {...result[0]};
     }));
     return results;

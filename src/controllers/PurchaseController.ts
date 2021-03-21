@@ -140,8 +140,9 @@ class PurchaseController {
     const { store } = request.query;
     try {
       if(!await CartValidation(cart)) return response.status(422).json({ error: 'Invalid cart' });
+
       const client = await Client.findOne({user: request.payload.id});
-      
+
       if(!await deliveryValidation.checkValueAndDeadline(client.address.zipCode, cart, delivery)) return response.status(422).json({ error: 'Invalid data delivery' });
 
       // if(!await PaymentValidation(cart, payment)) return response.status(422).json({ error: 'Invalid data payment' });
