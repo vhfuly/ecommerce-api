@@ -17,7 +17,7 @@ const ClientSchema: Schema<ClientDocument, ClientModel> = new Schema({
   store: { type: Schema.Types.ObjectId, ref: "Store", required: true},
   address: {
     type: {
-      place: { type: String, required: true },
+      street: { type: String, required: true },
       number: { type: String, required: true },
       complement: { type: String },
       zipCode: { type: String, required: true },

@@ -11,8 +11,8 @@ export interface ClientInterface {
   address: Address;
 }
 
-interface Address {
-  place: string;
+export interface Address {
+  street: string;
   number: string;
   complement: string;
   zipCode: string;

@@ -8,12 +8,12 @@ export interface DeliveryInterface {
   deadline: number;
   purchase: Types.ObjectId;
   store: Types.ObjectId;
-  // address: Address;
+  address: Address;
   payload: object;
 }
 
 interface Address {
-  place: string;
+  street: string;
   number: string;
   complement: string;
   zipCode: string;

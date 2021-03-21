@@ -9,18 +9,18 @@ const DeliverySchema: Schema<DeliveryDocument, DeliveryModel> = new Schema({
   type: { type: String, required: true },
   cost: { type: Number, required: true },
   deadline: { type: Number, required: true },
-  // address: {
-  //     type: {
-  //         place: { type: String, required: true },
-  //         number: { type: String, required: true },
-  //         complement: { type: String },
-  //         district: { type: String, required: true },
-  //         city: { type: String, required: true },
-  //         state: { type: String, required: true },
-  //         ZipCode: { type: String, required: true }
-  //     },
-  //     required: true
-  // },
+  address: {
+      type: {
+          street: { type: String, required: true },
+          number: { type: String, required: true },
+          complement: { type: String },
+          district: { type: String, required: true },
+          city: { type: String, required: true },
+          state: { type: String, required: true },
+          ZipCode: { type: String, required: true }
+      },
+      required: true
+  },
   purchase: { type: Schema.Types.ObjectId, ref: "Purchase", required: true },
   store: { type: Schema.Types.ObjectId, ref: "store", required: true },
   payload: { type: Object }
