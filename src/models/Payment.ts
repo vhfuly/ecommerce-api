@@ -22,7 +22,7 @@ const PaymentSchema: Schema<PaymentDocument, PaymentModel> = new Schema({
   card: {
     type: {
       name: { type: String, required: true },
-      areCode: { type: String, required: true },
+      areaCode: { type: String, required: true },
       phone: { type: String, required: true},
       birthDate: { type: String, required: true },
       creditCardToken: { type: String, required: true },

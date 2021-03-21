@@ -16,7 +16,7 @@ export interface PaymentInterface {
 
 interface Card {
   name: string;
-  areCode: string;
+  areaCode: string;
   phone: string;
   birthDate: string;
   creditCardToken: string;

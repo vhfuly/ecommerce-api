@@ -144,10 +144,10 @@ const _createPaymentWithCard = (senderHash, data: Data) => {
 
     pag.sendTransaction({
       method: 'creditCart',
-      value: (data.payment.value % 2 !== 0 && data.payment.parceled !== 1) ? data.payment.value + 0.01 : data.payment.value;
-      installments: data.payment.parceled,
+      value: (data.payment.value % 2 !== 0 && data.payment.parcel !== 1) ? data.payment.value + 0.01 : data.payment.value,
+      installments: data.payment.parcel,
       hash: senderHash,
-      credit_card_token: data.payment.card.credit_card_token
+      credit_card_token: data.payment.card.creditCardToken
     }, (err, data) => (err) ? reject(err) : resolve(data))
   })
 }
