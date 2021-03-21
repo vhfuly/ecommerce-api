@@ -141,7 +141,7 @@ class PurchaseController {
     try {
       if(!await CartValidation(cart)) return response.status(422).json({ error: 'Invalid cart' });
 
-      const client = await Client.findOne({user: request.payload.id});
+      const client = await (await Client.findOne({user: request.payload.id})).populate('User');
 
       if(!await deliveryValidation.checkValueAndDeadline(client.address.zipCode, cart, delivery)) return response.status(422).json({ error: 'Invalid data delivery' });
 
@@ -150,8 +150,11 @@ class PurchaseController {
       const newPayment = new Payment({
         value: payment.value,
         type: payment.type,
+        parcel: payment.parcel || 1,
         status: 'initiated',
-        payload: payment,
+        address: payment.address,
+        card: payment.card,
+        sameBillingAddress: payment.sameBillingAddress,
         store,
       });
 
@@ -160,7 +163,7 @@ class PurchaseController {
         cost: delivery.cost,
         deadline: delivery.deadline,
         type: delivery.type,
-        payload: delivery,
+        address: delivery.address,
         store,
       });
 

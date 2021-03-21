@@ -61,7 +61,7 @@ const clientValidation = {
       email: Joi.string().email().optional(),
       phones: Joi.array().items(Joi.string().optional()),
       address: Joi.object({
-        place: Joi.string().required(),
+        street: Joi.string().required(),
         number: Joi.string().required(),
         complement: Joi.string(),
         zipCode: Joi.string().required(),
@@ -90,7 +90,7 @@ const clientValidation = {
       birthDate: JoiDate.date().format('YYYY-MM-DD').required(),
       phones: Joi.array().items(Joi.string()).required(),
       address: Joi.object({
-        place: Joi.string().required(),
+        street: Joi.string().required(),
         number: Joi.string().required(),
         complement: Joi.string(),
         zipCode: Joi.string().required(),
@@ -114,7 +114,7 @@ const clientValidation = {
       email: Joi.string().email().optional(),
       phones: Joi.array().items(Joi.string().optional()),
       address: Joi.object({
-        place: Joi.string().required(),
+        street: Joi.string().required(),
         number: Joi.string().required(),
         complement: Joi.string(),
         zipCode: Joi.string().required(),

@@ -1,4 +1,7 @@
 import Joi from 'joi';
+import Extension from '@joi/date';
+
+const JoiDate = Joi.extend(Extension);
 
 const purchaseValidation = { 
   indexAdmin: {
@@ -56,11 +59,37 @@ const purchaseValidation = {
       payment: Joi.object({
         value:  Joi.number().required(),
         type:  Joi.string().required(),
+        parcel: Joi.number().optional(),
+        sameBillingAddress: Joi.boolean().required(),
+        address: Joi.object({
+          street: Joi.string().required(),
+          number: Joi.string().required(),
+          complement: Joi.string(),
+          zipCode: Joi.string().required(),
+          city: Joi.string().required(),
+          district: Joi.string().required(),
+        }).required(),
+        card: Joi.object({
+          name: Joi.string().required(),
+          areaCode: Joi.string().required(),
+          phone: Joi.string().required(),
+          birthDate: JoiDate.date().format('DD/MM/YYYY').required(),
+          creditCardToken: Joi.string().required(),
+          cpf: Joi.string().required(),
+        }).optional(),
       }).required(),
       delivery: Joi.object({
         cost: Joi.number().required(),
         deadline: Joi.number().required(),
         type: Joi.string().required(),
+        address: Joi.object({
+          street: Joi.string().required(),
+          number: Joi.string().required(),
+          complement: Joi.string(),
+          zipCode: Joi.string().required(),
+          city: Joi.string().required(),
+          district: Joi.string().required(),
+        }).required(),
       }).required(),
     }),
   },
