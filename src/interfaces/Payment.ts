@@ -1,10 +1,24 @@
 import { Types } from 'mongoose';
+import { Address } from '@interfaces/Client';
 
 export interface PaymentInterface {
   value: number;
   type: string;
-  parceled: object;
+  parcel: number;
   purchase: Types.ObjectId;
   store: Types.ObjectId;
-  payload: object;
+  payload: Array<any>;
+  address: Address;
+  card: Card;
+  sameBillingAddress: boolean;
+  pagseguroCode: string;
+}
+
+interface Card {
+  name: string;
+  areCode: string;
+  phone: string;
+  birthDate: string;
+  creditCardToken: string;
+  cpf: string;
 }
