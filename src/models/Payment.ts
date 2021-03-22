@@ -6,7 +6,8 @@ export interface PaymentDocument extends PaymentInterface, Document {}
 const PaymentSchema: Schema<PaymentDocument, PaymentModel> = new Schema({
   value: { type: Number, required: true },
   type: { type: String, required: true },
-  parcel: { type: Number, dafault: 1 },
+  parcel: { type: Number, default: 1 },
+  status: { type: String, required: true },
   address: {
     type: {
         street: { type: String, required: true },

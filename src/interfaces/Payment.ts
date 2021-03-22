@@ -5,6 +5,7 @@ export interface PaymentInterface {
   value: number;
   type: string;
   parcel: number;
+  status: string;
   purchase: Types.ObjectId;
   store: Types.ObjectId;
   payload: Array<any>;

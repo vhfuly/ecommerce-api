@@ -171,17 +171,17 @@ const getSessionId = () => {
   })
 }
 
-const getTransactionStatus = () => {
+const getTransactionStatus = (code: string) => {
   return new Promise((resolve, reject) => {
     const pag = new PagSeguro(pagSeguroConfig);
-    pag.transactionStatus((err, session_id) => (err) ? reject(err) :resolve(session_id));
+    pag.transactionStatus(code, (err, session_id) => (err) ? reject(err) :resolve(session_id));
   })
 }
 
 const getNotification = (code: string) => {
   return new Promise((resolve, reject) => {
     const pag = new PagSeguro(pagSeguroConfig);
-    pag.getNotification((err, session_id) => (err) ? reject(err) :resolve(session_id));
+    pag.getNotification(code,(err, session_id) => (err) ? reject(err) :resolve(session_id));
   })
 }
 

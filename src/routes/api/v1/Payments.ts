@@ -13,7 +13,7 @@ if (process.env.NODE_ENV !== 'production') {
   router.get('/tokens', (request: Request, response: Response) => response.render('pagseguro/index'));
 }
 
-//pagsegro
+//pagseguro
 router.post('/notification', paymentController.notification);
 router.get('/session', paymentController.getSessionId);
 
