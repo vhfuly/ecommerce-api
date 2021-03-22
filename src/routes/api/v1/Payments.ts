@@ -4,6 +4,7 @@ import { validate } from 'express-validation';
 
 import { auth } from '../../auth';
 import { storeValidation } from '@validations/StoreValidation';
+import { paymentValidation } from '@validations/PaymentValidation';
 import { PaymentController } from '@controllers/PaymentController';
 const paymentController = new PaymentController();
 const router = Router();
@@ -18,11 +19,11 @@ router.post('/notification', paymentController.notification);
 router.get('/session', paymentController.getSessionId);
 
 //client
-router.get('/:id', auth.required, paymentController.show);
-router.post('/pay/:id', auth.required, paymentController.pay);
+router.get('/:id', auth.required, validate(paymentValidation.show), paymentController.show);
+router.post('/pay/:id', auth.required, validate(paymentValidation.pay), paymentController.pay);
 
 //ADMIN
 
-router.put('/:id', auth.required, storeValidation.admin, paymentController.update);
+router.put('/:id', auth.required, storeValidation.admin, validate(paymentValidation.update), paymentController.update);
 
 export { router as paymentsRouter }
