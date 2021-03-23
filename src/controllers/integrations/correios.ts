@@ -40,7 +40,7 @@ const calculateShipping = async ( zipCode: string, products: Cart[] ) => {
         nVlAltura: box.height,
         nVlLargura: box.width,
         nVlDiamentro: 0,
-        nVlValorDeclarado: priceTotal < 19.5 ? 19.5 : priceTotal
+        nVlValorDeclarado: priceTotal < 20.5 ? 20.5 : priceTotal
       });
       console.log(result)
       return {...result[0]};
