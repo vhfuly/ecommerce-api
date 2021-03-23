@@ -1,8 +1,11 @@
-export default {
+
+const pagSeguroConfig = {
   mode: process.env.NODE_ENV === 'production' ? 'live' : 'sandbox',
   sandbox: process.env.NODE_ENV === 'production' ? false : true,
   sandbox_email: process.env.NODE_ENV === 'production' ? null : 'email@sandbox.pagseguro.com.br',
-  email: 'vh.alemao@gmail.com',
-  token: 'EEDB08F86D454C5484FE319A01226D90',
+  email: process.env.EMAIL_PAGSEGURO,
+  token: process.env.TOKEN_PAGSEGURO,
   notificationURL: ''//url de notificação ,
 }
+
+export { pagSeguroConfig }

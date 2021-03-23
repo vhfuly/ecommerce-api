@@ -7,6 +7,7 @@ import cors from 'cors';
 import { ValidationError } from 'express-validation';
 import { router } from './routes';
 import { dbs } from '@config/database';
+import * as dotenv from 'dotenv';
 
 const app = express();
 app.use(express.json());
@@ -31,7 +32,7 @@ app.use(compression());
 
 app.use(bodyParser.urlencoded({ extended: false, limit: 1.5 * 1024 * 1024 }));
 app.use(bodyParser.json({ limit: 1.5 * 1024 * 1024 }));
-
+dotenv.config();
 app.use('/', router);
 
 app.use((err: ValidationError, request:Request, response: Response, _next: NextFunction) => {

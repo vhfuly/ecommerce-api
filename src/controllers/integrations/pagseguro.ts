@@ -1,4 +1,4 @@
-import pagSeguroConfig from '@config/pagseguro';
+import { pagSeguroConfig } from '@config/pagseguro';
 import PagSeguro from '../../helpers/ṕagseguro';
 
 import { DeliveryInterface } from '@interfaces/Delivery';
