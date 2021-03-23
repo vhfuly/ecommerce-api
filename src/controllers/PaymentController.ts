@@ -105,7 +105,7 @@ class PaymentController {
   async getSessionId(request: Request, response: Response , next: NextFunction) {
     try {
       const sessionId = await getSessionId();
-      response.json(sessionId)
+      response.send({sessionId})
     } catch (error) {
       next(error)
     }

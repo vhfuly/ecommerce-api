@@ -167,7 +167,7 @@ const createPayment = async(senderHash, data: Data ) => {
 const getSessionId = () => {
   return new Promise((resolve, reject) => {
     const pag = new PagSeguro(pagSeguroConfig);
-    pag.sessionId((err, session_id) => (err) ? reject(err) :resolve(session_id));
+    pag.sessionId((err, session_id) => (err) ? reject(err) : resolve(session_id));
   })
 }
 
