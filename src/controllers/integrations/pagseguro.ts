@@ -42,7 +42,7 @@ const _createPaymentWithTicket = (senderHash, data: Data) => {
       name: data.client.name,
       email: data.client.user.email,
       cpf_cnpj: data.client.cpf.replace(/[-\.]/g, ''),
-      area_code: data.client.phones[0].slice(0,2),
+      area_code: data.client.phones[0].slice(0,2).split(' ').join(''),
       phone: data.client.phones[0].slice(2).trim(),
       birth_date: data.client.birthDate, // formato DD/MM/YYYYY
     });
@@ -97,7 +97,7 @@ const _createPaymentWithCard = (senderHash, data: Data) => {
       email: data.client.user.email,
       cpf_cnpj: data.client.cpf.replace(/[-\.]/g, ''),
       area_code: data.client.phones[0].slice(0,2),
-      phone: data.client.phones[0].slice(2).trim(),
+      phone: data.client.phones[0].slice(2).trim().split(' ').join(''),
       birth_date: data.client.birthDate, // formato DD/MM/YYYYY
     });
 
@@ -137,7 +137,7 @@ const _createPaymentWithCard = (senderHash, data: Data) => {
     pag.setCreditCardHolder({
       name: data.payment.card.name || data.client.name,
       area_code: data.payment.card.areaCode.trim() || data.client.phones[0].slice(0,2),
-      phone: data.payment.card.phone.trim() || data.client.phones[0].slice(2).trim(),
+      phone: (data.payment.card.phone.trim() || data.client.phones[0].slice(2).trim()).split(' ').join(),
       birth_date: data.payment.card.birthDate || data.client.birthDate,
       cpf_cnpj: (data.payment.card.cpf ||data.client.cpf).replace(/[-\.]/g, ''),
     })
@@ -154,7 +154,7 @@ const _createPaymentWithCard = (senderHash, data: Data) => {
 
 const createPayment = async(senderHash, data: Data ) => {
   try {
-    if (data.payment.type === 'boleto') return await _createPaymentWithTicket(senderHash, data);
+    if (data.payment.type === 'ticket') return await _createPaymentWithTicket(senderHash, data);
     else if ( data.payment.type === "creditCard" ) return await _createPaymentWithCard(senderHash, data);
     else return { errorMessage: "Payment method not found." };
     
