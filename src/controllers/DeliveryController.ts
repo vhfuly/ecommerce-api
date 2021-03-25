@@ -6,6 +6,10 @@ import { Cart } from '@interfaces/Cart';
 import Product, { ProductDocument } from '@models/Product';
 import Variation, { VariationDocument } from '@models/Variation';
 import { calculateShipping } from './integrations/correios';
+import { updatePurchase } from '../services/EmailService';
+import Client from '@models/Client';
+import Purchase from '@models/Purchase';
+import User from '@models/User';
 
 interface CartCorreios {
   variation: VariationDocument;
@@ -38,6 +42,10 @@ class DeliveryController {
       if (status) delivery.status = status;
       if (trackingCode) delivery.trackingCode = trackingCode;
       // enviar email de aviso
+      const purchase = await Purchase.findById(delivery.purchase);
+      const client = await Client.findById(purchase.client);
+      const user = await User.findById(client.user);      
+      updatePurchase(user, purchase, status, new Date(), 'delivery')
       const record = new PurchasesRecord({
         purchase: delivery.purchase,
         type: 'delivery',

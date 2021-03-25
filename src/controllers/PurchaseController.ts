@@ -10,6 +10,8 @@ import { CartValidation } from './validations/CartValidation';
 import PurchasesRecord from '@models/PurchasesRecord';
 import { deliveryValidation } from './validations/DeliveryValidation';
 import { paymentValidation } from './validations/PaymentValidation';
+import { cancelPurchase, submitNewPurchase } from '../services/EmailService';
+import User from '@models/User';
 
 class PurchaseController {
   //ADMIN
@@ -58,14 +60,19 @@ class PurchaseController {
     const { id } = request.params;
     try {
       const purchase = await Purchase.findOne({ store: String(store), _id: id })
+        .populate({path: 'client', populate: 'user'});
+      const client = await Client.findById(purchase.client);
+      const user = await User.findById(client.user);
       if (!purchase) return response.status(400).json({Error: 'Purchase not found'});
       purchase.canceled = true;
-      // enviar email para cliente e admin
+
       const purchasesRecord = new PurchasesRecord({
         purchase: purchase._id,
         type: 'purchase',
         status: 'purchase_canceled',
       })
+      //Email
+      cancelPurchase(user, purchase);
       await purchase.save();
       await purchasesRecord.save();
       return response.json({ canceled: true });
@@ -142,9 +149,9 @@ class PurchaseController {
     try {
       if(!await CartValidation(cart)) return response.status(422).json({ error: 'Invalid cart' });
 
-      const client = await (await Client.findOne({user: request.payload.id})).populate('User');
+      const client = await Client.findOne({user: request.payload.id}).populate('User');
       if(!await deliveryValidation.checkValueAndDeadline(client.address.zipCode, cart, delivery)) return response.status(422).json({ error: 'Invalid data delivery' });
-
+      const user = await User.findById(client.user)
       if(!await paymentValidation.checkTotalValue(cart, delivery, payment)) return response.status(422).json({ error: 'Invalid data payment' });
       if(!paymentValidation.checkCard(payment)) return response.status(422).json({ error: 'Invalid data with card payment' });
 
@@ -179,6 +186,11 @@ class PurchaseController {
       newPayment.purchase = purchase._id;
       
       //notificar via e-mail - client e admin
+      submitNewPurchase(user, purchase);
+      const admins = await User.find({permission: 'admin', store: String(store) });
+      admins.forEach((admin) => {
+        submitNewPurchase(admin, purchase);
+      })
       const purchasesRecord = new PurchasesRecord({
         purchase: purchase._id,
         type: 'purchase',
@@ -206,6 +218,10 @@ class PurchaseController {
       if (!purchase) return response.status(400).json({Error: 'Purchase not found'});
       purchase.canceled = true;
       // enviar email para admin 
+      const admins = await User.find({permission: 'admin', store: String(store) });
+      admins.forEach((admin) => {
+        cancelPurchase(admin, purchase);
+      })
       const purchasesRecord = new PurchasesRecord({
         purchase: purchase._id,
         type: 'purchase',
