@@ -5,7 +5,7 @@ const pagSeguroConfig = {
   sandbox_email: process.env.NODE_ENV === 'production' ? null : 'email@sandbox.pagseguro.com.br',
   email: process.env.EMAIL_PAGSEGURO,
   token: process.env.TOKEN_PAGSEGURO,
-  notificationURL: ''//url de notificação ,
+  notificationURL: 'http://localhost:3000/v1/ap1/payments/notification'//url de notificação ,
 }
 
 export { pagSeguroConfig }
