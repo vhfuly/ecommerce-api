@@ -68,6 +68,7 @@ const purchaseValidation = {
           zipCode: Joi.string().required(),
           city: Joi.string().required(),
           district: Joi.string().required(),
+          state: Joi.string().required(),
         }).required(),
         card: Joi.object({
           name: Joi.string().required(),
@@ -89,6 +90,7 @@ const purchaseValidation = {
           zipCode: Joi.string().required(),
           city: Joi.string().required(),
           district: Joi.string().required(),
+          state: Joi.string().required(),
         }).required(),
       }).required(),
     }),

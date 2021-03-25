@@ -92,8 +92,9 @@ class PaymentController {
       const purchasesRecord = new PurchasesRecord({
         purchase: payment.purchase,
         type: 'payment',
-        status: status.status || "Status",
+        status: status || "Status",
       })
+      console.log(purchasesRecord)
       await purchasesRecord.save();
       //Enviar email de aviso pra o cliente
       await payment.save();

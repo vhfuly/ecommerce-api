@@ -133,17 +133,17 @@ const _createPaymentWithCard = (senderHash, data: Data) => {
       value: data.delivery.cost,
       description: 'Custo de Entregas - Correios',
     });
-
+console.log(data.payment.card.name || data.client.name)
     pag.setCreditCardHolder({
       name: data.payment.card.name || data.client.name,
       area_code: data.payment.card.areaCode.trim() || data.client.phones[0].slice(0,2),
       phone: (data.payment.card.phone.trim() || data.client.phones[0].slice(2).trim()).split(' ').join(),
       birth_date: data.payment.card.birthDate || data.client.birthDate,
-      cpf_cnpj: (data.payment.card.cpf ||data.client.cpf).replace(/[-\.]/g, ''),
+      cpf_cnpj: (data.payment.card.cpf || data.client.cpf).replace(/[-\.]/g, ''),
     })
-
+    
     pag.sendTransaction({
-      method: 'creditCart',
+      method: 'creditCard',
       value: (data.payment.value % 2 !== 0 && data.payment.parcel !== 1) ? data.payment.value + 0.01 : data.payment.value,
       installments: data.payment.parcel,
       hash: senderHash,
