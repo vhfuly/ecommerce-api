@@ -11,11 +11,12 @@
 - [x]  assessments
 - [x]  variations
 - [X]  purchases
-- [ ]  correios
-- [ ]  delivery
-- [ ]  pagseguro
+- [x]  correios
+- [x]  delivery
+- [x]  pagseguro
 - [ ]  mercadopago
 - [ ]  paypal
-- [ ]  payments
+- [ ]  picpay
+- [x]  payments
 - [ ]  email notification
 - [ ]  unit tests
