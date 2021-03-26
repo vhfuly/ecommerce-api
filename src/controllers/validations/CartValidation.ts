@@ -27,14 +27,12 @@ const getStoreValue = async(cart: Cart[]) => {
   }));
   let totalPrice = results.reduce((all, item) => all + item.price, 0)
   let amount = results.reduce((all, item) => all + item.amountVariation, 0)
-
   return { totalPrice, amount };
 }
 
 const CartValidation = async(cart: Cart[]) => {
   const { totalPrice: totalPriceCart, amount: totalAmountCart } = getCartValue(cart);
   const { totalPrice: totalPriceStore, amount: totalAmountStore} = await getStoreValue(cart);
-
   return totalPriceCart === totalPriceStore && totalAmountCart === totalAmountStore;
 }
 

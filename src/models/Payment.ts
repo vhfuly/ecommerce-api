@@ -10,13 +10,13 @@ const PaymentSchema: Schema<PaymentDocument, PaymentModel> = new Schema({
   status: { type: String, required: true },
   address: {
     type: {
-        street: { type: String, required: true },
-        number: { type: String, required: true },
-        complement: { type: String },
-        district: { type: String, required: true },
-        city: { type: String, required: true },
-        state: { type: String, required: true },
-        ZipCode: { type: String, required: true }
+      street: { type: String, required: true },
+      number: { type: String, required: true },
+      complement: { type: String },
+      district: { type: String, required: true },
+      city: { type: String, required: true },
+      state: { type: String, required: true },
+      ZipCode: { type: String, required: true }
     },
     required: true
   },

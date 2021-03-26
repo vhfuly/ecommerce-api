@@ -8,7 +8,7 @@ import { ProductDocument } from '@models/Product';
 interface Cart {
   variation: VariationDocument;
   product: ProductDocument;
-  staticProduct: string;
+  staticProduct: string;s
   amount: number;
   unitPrice: number;
 }

@@ -10,7 +10,7 @@ export interface PaymentInterface {
   store: Types.ObjectId;
   payload: Array<any>;
   address: Address;
-  card: Card;
+  card?: Card;
   sameBillingAddress: boolean;
   pagseguroCode: string;
 }

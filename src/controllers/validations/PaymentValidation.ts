@@ -61,7 +61,7 @@ const paymentValidation = {
   },
     
   checkCard: (payment: PaymentInterface) => {
-    if( payment.type === 'creditCard' ){
+    if(payment.type === 'creditCard' ){
       return (
         payment.card.name && typeof payment.card.name === 'string' &&
         payment.card.areaCode && typeof payment.card.areaCode === 'string' &&

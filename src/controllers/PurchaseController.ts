@@ -103,7 +103,6 @@ class PurchaseController {
     const offset = Number(request.query.offset) || 0;
     const limit = Number(request.query.limit) || 0;
     try {
-      console.log(request.payload)
       const client = await Client.findOne({user: request.payload.id});
       if (!client) return response.status(400).json({Error: 'Client not found'});
       let purchases = await Purchase.find({store: String(store), client: client._id })
@@ -148,20 +147,19 @@ class PurchaseController {
     const { store } = request.query;
     try {
       if(!await CartValidation(cart)) return response.status(422).json({ error: 'Invalid cart' });
-
-      const client = await Client.findOne({user: request.payload.id}).populate('User');
+      const client = await Client.findOne({user: request.payload.id});
       if(!await deliveryValidation.checkValueAndDeadline(client.address.zipCode, cart, delivery)) return response.status(422).json({ error: 'Invalid data delivery' });
       const user = await User.findById(client.user)
       if(!await paymentValidation.checkTotalValue(cart, delivery, payment)) return response.status(422).json({ error: 'Invalid data payment' });
       if(!paymentValidation.checkCard(payment)) return response.status(422).json({ error: 'Invalid data with card payment' });
-
+  
       const newPayment = new Payment({
         value: payment.value,
         type: payment.type,
         parcel: payment.parcel || 1,
         status: 'initiated',
         address: payment.address,
-        card: payment.card,
+        card: payment.card || null,
         sameBillingAddress: payment.sameBillingAddress,
         store,
       });
@@ -174,6 +172,7 @@ class PurchaseController {
         address: delivery.address,
         store,
       });
+      
 
       const purchase = new Purchase({
         client: client._id,
@@ -181,11 +180,13 @@ class PurchaseController {
         payment: newPayment._id,
         delivery: newDelivery._id,
         store,
+        createdAt: new Date(),
       });
+
       newDelivery.purchase = purchase._id;
       newPayment.purchase = purchase._id;
-      
       //notificar via e-mail - client e admin
+      
       submitNewPurchase(user, purchase);
       const admins = await User.find({permission: 'admin', store: String(store) });
       admins.forEach((admin) => {

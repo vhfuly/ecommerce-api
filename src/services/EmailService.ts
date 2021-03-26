@@ -9,7 +9,7 @@ const link = config.store;
 
 let mail = transporter.createTransport(createTransport)
 
-const send = ({ subject, emails, message}, cb = null) => {
+const send = ( subject: string, emails: string, message: string, cb = null) => {
   const mailOptions = {
     from: 'no-response@loja.com',
     to: emails,
@@ -37,18 +37,18 @@ const submitNewPurchase = (user: UserInterface, purchase: PurchaseInterface ) =>
   const message = `
       <h1 style="text-align:center;">Pedido Recebido</h1>
       <br />
-      <p>O pedido realizado hoje, no dia ${format(purchase.createdAt, 'dd/MM/YYYY')}, foi recebido com sucesso.</p>
+      <p>O pedido realizado hoje, no dia ${format(purchase.createdAt, 'dd/MM/yyyy')}, foi recebido com sucesso.</p>
       <br />
       <a href="${link}">Acesse a loja para saber mais.</a>
       <br /><br />
       <p>Atenciosamente,</p>
       <p>Equipe - Loja</p>
   `;
-  send({
-    subject: 'Pedido Recebido - Loja',
-    emails: user.email,
+  send(
+    'Pedido Recebido - Loja',
+    user.email,
     message
-  });
+  );
 }
 
   // PEDIDO CANCELADO
@@ -56,18 +56,18 @@ const cancelPurchase = (user: UserInterface, purchase: PurchaseInterface) => {
   const message = `
     <h1 style="text-align:center;">Pedido Cancelado</h1>
     <br />
-    <p>O pedido feito no dia ${format(purchase.createdAt, 'dd/MM/YYYY')} foi cancelado.</p>
+    <p>O pedido feito no dia ${format(purchase.createdAt, 'dd/MM/yyyy')} foi cancelado.</p>
     <br />
     <a href="${link}">Acesse a loja para saber mais.</a>
     <br /><br />
     <p>Atenciosamente,</p>
     <p>Equipe - Loja</p>
   `;
-  send({
-    subject: "Pedido Cancelado - Loja",
-    emails: user.email,
+  send(
+    "Pedido Cancelado - Loja",
+    user.email,
     message
-  });
+  );
 }
 
 // ATUALIZACAO DE PAGAMENTO E ENTREGA
@@ -75,20 +75,20 @@ const updatePurchase = (user: UserInterface, purchase: PurchaseInterface, status
   const message = `
     <h1 style="text-align:center;">Pedido Atualizado</h1>
     <br />
-    <p>O pedido feito no dia ${format(purchase.createdAt, 'dd/MM/YYYY')} teve uma atualização.</p>
+    <p>O pedido feito no dia ${format(purchase.createdAt, 'dd/MM/yyyy')} teve uma atualização.</p>
     <br />
-    <p>Nova Atualização: ${status} - realizado em ${format(data, 'dd/MM/YYYY HH:mm')}</p>
+    <p>Nova Atualização: ${status} - realizado em ${format(data, 'dd/MM/yyyyy HH:mm')}</p>
     <br />
     <a href="${link}">Acesse a loja para saber mais.</a>
     <br /><br />
     <p>Atenciosamente,</p>
     <p>Equipe - Loja</p>
   `;
-  send({
-    subject: "Pedido Atualizado - Loja",
-    emails: user.email,
+  send(
+    "Pedido Atualizado - Loja",
+    user.email,
     message
-  });
+  );
 }
 
 export {
