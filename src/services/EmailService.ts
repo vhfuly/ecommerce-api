@@ -42,10 +42,10 @@ const submitNewPurchase = (user: UserInterface, purchase: PurchaseInterface ) =>
       <a href="${link}">Acesse a loja para saber mais.</a>
       <br /><br />
       <p>Atenciosamente,</p>
-      <p>Equipe - Loja TI</p>
+      <p>Equipe - Loja</p>
   `;
   send({
-    subject: 'Pedido Recebido - Loja TI',
+    subject: 'Pedido Recebido - Loja',
     emails: user.email,
     message
   });
@@ -56,37 +56,37 @@ const cancelPurchase = (user: UserInterface, purchase: PurchaseInterface) => {
   const message = `
     <h1 style="text-align:center;">Pedido Cancelado</h1>
     <br />
-    <p>O pedido feito no dia ${moment(pedido.createdAt).format("DD/MM/YYYY")} foi cancelado.</p>
+    <p>O pedido feito no dia ${format(purchase.createdAt, 'dd/MM/YYYY')} foi cancelado.</p>
     <br />
     <a href="${link}">Acesse a loja para saber mais.</a>
     <br /><br />
     <p>Atenciosamente,</p>
-    <p>Equipe - Loja TI</p>
+    <p>Equipe - Loja</p>
   `;
   send({
-    subject: "Pedido Cancelado - Loja TI",
-    emails: usuario.email,
+    subject: "Pedido Cancelado - Loja",
+    emails: user.email,
     message
   });
 }
 
 // ATUALIZACAO DE PAGAMENTO E ENTREGA
-const updatePurchase = (usuario, pedido, status, data, tipo ) => {
+const updatePurchase = (user: UserInterface, purchase: PurchaseInterface, status: string, data: Date, type:string ) => {
   const message = `
     <h1 style="text-align:center;">Pedido Atualizado</h1>
     <br />
-    <p>O pedido feito no dia ${moment(pedido.createdAt).format("DD/MM/YYYY")} teve uma atualização.</p>
+    <p>O pedido feito no dia ${format(purchase.createdAt, 'dd/MM/YYYY')} teve uma atualização.</p>
     <br />
-    <p>Nova Atualização: ${status} - realizado em ${moment(data).format("DD/MM/YYYY HH:mm")}</p>
+    <p>Nova Atualização: ${status} - realizado em ${format(data, 'dd/MM/YYYY HH:mm')}</p>
     <br />
     <a href="${link}">Acesse a loja para saber mais.</a>
     <br /><br />
     <p>Atenciosamente,</p>
-    <p>Equipe - Loja TI</p>
+    <p>Equipe - Loja</p>
   `;
   send({
-    subject: "Pedido Atualizado - Loja TI",
-    emails: usuario.email,
+    subject: "Pedido Atualizado - Loja",
+    emails: user.email,
     message
   });
 }
