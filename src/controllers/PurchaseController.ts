@@ -12,7 +12,7 @@ import { deliveryValidation } from './validations/DeliveryValidation';
 import { paymentValidation } from './validations/PaymentValidation';
 import { cancelPurchase, submitNewPurchase } from '../services/EmailService';
 import User from '@models/User';
-import { validateAvailableAmount } from './validations/AmountValidation';
+import { validateAvailableAmount, updateAmount } from './validations/AmountValidation';
 
 class PurchaseController {
   //ADMIN
@@ -74,6 +74,7 @@ class PurchaseController {
       cancelPurchase(purchase.client.user, purchase);
       await purchase.save();
       await purchasesRecord.save();
+      await updateAmount('canceledPurchase', purchase)
       return response.json({ canceled: true });
     } catch (error) {
       next(error);
@@ -199,6 +200,7 @@ class PurchaseController {
       await purchase.save();
       await newDelivery.save();
       await newPayment.save();
+      await updateAmount('SavePurchase', purchase);
       await purchasesRecord.save();
       response.json({
         purchase: purchase, delivery: newDelivery, payment: newPayment, client: client,
@@ -229,6 +231,7 @@ class PurchaseController {
       })
       await purchase.save();
       await purchasesRecord.save();
+      await updateAmount('canceledPurchase', purchase)
       return response.json({ canceled: true });
     } catch (error) {
       next(error);

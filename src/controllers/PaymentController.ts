@@ -8,6 +8,7 @@ import Purchase from '@models/Purchase';
 import Variation from '@models/Variation';
 import { Cart } from '@interfaces/Cart';
 import { updatePurchase } from '../services/EmailService';
+import { updateAmount } from './validations/AmountValidation';
 
 class PaymentController {
   async show(request: Request, response: Response , next: NextFunction) {
@@ -103,6 +104,9 @@ class PaymentController {
       updatePurchase(purchase.client.user, purchase, status, new Date(), 'payment')
       await purchasesRecord.save();
       await payment.save();
+
+      if (status.toLowerCase().includes('pago')) await updateAmount('confirmPurchase', purchase)
+      if (status.toLowerCase().includes('cancelado')) await updateAmount('canceledPurchase', purchase)
       response.json(payment);
     } catch (error) {
       next(error);
@@ -134,23 +138,25 @@ class PaymentController {
 
       if( 
         status && 
-          ( 
-            record.length === 0 || 
-            record[record.length-1].payload.code !== status.code 
-          ) 
+        ( 
+          record.length === 0 || 
+          record[record.length-1].payload.code !== status.code 
+        ) 
       ){
-          const purchasesRecord = new PurchasesRecord({
-              purchase: payment.purchase,
-              type: "payment",
-              status: status.status || "Status",
-              payload: status
-          });
-          payment.status = status.status;
-          // Enviar email de aviso para o cliente - aviso de atualizacao de payment
-          const purchase = await Purchase.findById(payment.purchase).populate({path: 'client', populate: {path: 'user'}});    
-          updatePurchase(purchase.client.user, purchase, status, new Date(), 'payment')
-          await payment.save();
-          await purchasesRecord.save();
+        const purchasesRecord = new PurchasesRecord({
+            purchase: payment.purchase,
+            type: "payment",
+            status: status.status || "Status",
+            payload: status
+        });
+        payment.status = status.status;
+        // Enviar email de aviso para o cliente - aviso de atualizacao de payment
+        const purchase = await Purchase.findById(payment.purchase).populate({path: 'client', populate: {path: 'user'}});    
+        updatePurchase(purchase.client.user, purchase, status, new Date(), 'payment')
+        await payment.save();
+        if (status.toLowerCase().includes('pago')) await updateAmount('confirmPurchase', purchase)
+        if (status.toLowerCase().includes('cancelado')) await updateAmount('canceledPurchase', purchase)
+        await purchasesRecord.save();
       }
       response.json({ success: true });
     } catch (error) {
