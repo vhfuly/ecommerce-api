@@ -1,7 +1,8 @@
 import { Types } from 'mongoose';
+import { UserDocument } from '@models/User';
 
 export interface ClientInterface {
-  user: Types.ObjectId;
+  user: UserDocument;
   name: string;
   birthDate: Date;
   cpf: string;

@@ -38,14 +38,12 @@ class DeliveryController {
     const { store } = request.query;
     try {
       const delivery = await Delivery.findOne({ _id: id , store: String(store) });
-
+      if(!delivery) return response.json({ error: 'Delivery not found!'});
       if (status) delivery.status = status;
       if (trackingCode) delivery.trackingCode = trackingCode;
       // enviar email de aviso
-      const purchase = await Purchase.findById(delivery.purchase);
-      const client = await Client.findById(purchase.client);
-      const user = await User.findById(client.user);      
-      updatePurchase(user, purchase, status, new Date(), 'delivery')
+      const purchase = await Purchase.findById(delivery.purchase).populate({path: 'client', populate: {path: 'user'}});
+      updatePurchase(purchase.client.user, purchase, status, new Date(), 'delivery')
       const record = new PurchasesRecord({
         purchase: delivery.purchase,
         type: 'delivery',

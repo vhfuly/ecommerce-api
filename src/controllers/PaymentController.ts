@@ -8,8 +8,6 @@ import Purchase from '@models/Purchase';
 import Variation from '@models/Variation';
 import { Cart } from '@interfaces/Cart';
 import { updatePurchase } from '../services/EmailService';
-import Client from '@models/Client';
-import User from '@models/User';
 
 class PaymentController {
   async show(request: Request, response: Response , next: NextFunction) {
@@ -44,10 +42,8 @@ class PaymentController {
         await purchasesRecord.save();
         record.push(purchasesRecord);
       }
-      const purchase = await Purchase.findById(payment.purchase);
-      const client = await Client.findById(purchase.client);
-      const user = await User.findById(client.user);      
-      updatePurchase(user, purchase, status, new Date(), 'payment')
+      const purchase = await Purchase.findById(payment.purchase).populate({path: 'client', populate: {path: 'user'}});      
+      updatePurchase(purchase.client.user, purchase, status, new Date(), 'payment')
       response.json({ payment, record, status });
     } catch (error) {
       next(error);
@@ -101,14 +97,12 @@ class PaymentController {
         type: 'payment',
         status: status || "Status",
       })
-      console.log(purchasesRecord)
-      await purchasesRecord.save();
+    
       //Enviar email de aviso pra o cliente
-      const purchase = await Purchase.findById(payment.purchase);
-      const client = await Client.findById(purchase.client);
-      const user = await User.findById(client.user);      
-      updatePurchase(user, purchase, status, new Date(), 'payment')
-      await payment.save();
+      const purchase: PurchaseInterface = await Purchase.findById(payment.purchase).populate({path: 'client', populate: {path: 'user'}});    
+      updatePurchase(purchase.client.user, purchase, status, new Date(), 'payment')
+      // await purchasesRecord.save();
+      // await payment.save();
       response.json(payment);
     } catch (error) {
       next(error);

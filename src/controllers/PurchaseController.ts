@@ -60,9 +60,7 @@ class PurchaseController {
     const { id } = request.params;
     try {
       const purchase = await Purchase.findOne({ store: String(store), _id: id })
-        .populate({path: 'client', populate: 'user'});
-      const client = await Client.findById(purchase.client);
-      const user = await User.findById(client.user);
+        .populate({path: 'client', populate: {path: 'user'}});
       if (!purchase) return response.status(400).json({Error: 'Purchase not found'});
       purchase.canceled = true;
 
@@ -72,7 +70,7 @@ class PurchaseController {
         status: 'purchase_canceled',
       })
       //Email
-      cancelPurchase(user, purchase);
+      cancelPurchase(purchase.client.user, purchase);
       await purchase.save();
       await purchasesRecord.save();
       return response.json({ canceled: true });
@@ -147,9 +145,8 @@ class PurchaseController {
     const { store } = request.query;
     try {
       if(!await CartValidation(cart)) return response.status(422).json({ error: 'Invalid cart' });
-      const client = await Client.findOne({user: request.payload.id});
+      const client = await Client.findOne({user: request.payload.id}).populate('user');
       if(!await deliveryValidation.checkValueAndDeadline(client.address.zipCode, cart, delivery)) return response.status(422).json({ error: 'Invalid data delivery' });
-      const user = await User.findById(client.user)
       if(!await paymentValidation.checkTotalValue(cart, delivery, payment)) return response.status(422).json({ error: 'Invalid data payment' });
       if(!paymentValidation.checkCard(payment)) return response.status(422).json({ error: 'Invalid data with card payment' });
   
@@ -187,7 +184,7 @@ class PurchaseController {
       newPayment.purchase = purchase._id;
       //notificar via e-mail - client e admin
       
-      submitNewPurchase(user, purchase);
+      submitNewPurchase(client.user, purchase);
       const admins = await User.find({permission: 'admin', store: String(store) });
       admins.forEach((admin) => {
         submitNewPurchase(admin, purchase);

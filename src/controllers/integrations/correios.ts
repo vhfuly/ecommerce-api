@@ -5,7 +5,7 @@ import { calcBox } from '../../helpers/calcBox';
 import { VariationDocument } from '@models/Variation';
 import { ProductDocument } from '@models/Product';
 
-interface Cart {
+interface CartCorreios {
   variation: VariationDocument;
   product: ProductDocument;
   staticProduct: string;s
@@ -15,7 +15,7 @@ interface Cart {
 
 const correios = new Correios()
 
-const calculateShipping = async ( zipCode: string, products: Cart[] ) => {
+const calculateShipping = async ( zipCode: string, products: CartCorreios[] ) => {
   const _products = products.map(item => ({
     weightKg: item.variation.delivery.weightKg,
     depthCm: item.variation.delivery.dimensions.depthCm,

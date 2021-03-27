@@ -1,14 +1,16 @@
-import { Types } from 'mongoose';
 import { Cart } from './Cart';
-import { ClientInterface } from './Client';
+import { ClientDocument } from '@models/Client';
+import { PaymentDocument } from '@models/Payment';
+import { DeliveryDocument } from '@models/Delivery';
+import { StoreDocument } from '@models/Store';
 
 export interface PurchaseInterface {
-  client: Types.ObjectId ,
+  client: ClientDocument,
   cart: Cart[];
-  payment: Types.ObjectId;
-  delivery: Types.ObjectId;
+  payment: PaymentDocument;
+  delivery: DeliveryDocument;
   canceled: boolean;
-  store: Types.ObjectId;
+  store: StoreDocument | string;
   createdAt?: Date;
   updateAt?: Date;
 }
