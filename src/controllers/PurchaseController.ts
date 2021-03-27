@@ -12,6 +12,7 @@ import { deliveryValidation } from './validations/DeliveryValidation';
 import { paymentValidation } from './validations/PaymentValidation';
 import { cancelPurchase, submitNewPurchase } from '../services/EmailService';
 import User from '@models/User';
+import { validateAvailableAmount } from './validations/AmountValidation';
 
 class PurchaseController {
   //ADMIN
@@ -146,6 +147,7 @@ class PurchaseController {
     try {
       if(!await CartValidation(cart)) return response.status(422).json({ error: 'Invalid cart' });
       const client = await Client.findOne({user: request.payload.id}).populate('user');
+      if(!await validateAvailableAmount(cart)) return response.status(400).json({ error: 'No products available' });
       if(!await deliveryValidation.checkValueAndDeadline(client.address.zipCode, cart, delivery)) return response.status(422).json({ error: 'Invalid data delivery' });
       if(!await paymentValidation.checkTotalValue(cart, delivery, payment)) return response.status(422).json({ error: 'Invalid data payment' });
       if(!paymentValidation.checkCard(payment)) return response.status(422).json({ error: 'Invalid data with card payment' });

@@ -17,6 +17,7 @@ export interface VariationInterface {
     freeShipping: boolean;
   }
   amount: number;
+  blockedAmount: number;
   product: Types.ObjectId;
   store: Types.ObjectId;
   availability?: boolean,

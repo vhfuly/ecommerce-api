@@ -14,9 +14,9 @@
 - [x]  correios
 - [x]  delivery
 - [x]  pagseguro
+- [x]  payments
+- [x]  email notification
 - [ ]  mercadopago
 - [ ]  paypal
 - [ ]  picpay
-- [x]  payments
-- [x]  email notification
 - [ ]  unit tests
