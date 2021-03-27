@@ -18,5 +18,5 @@
 - [ ]  paypal
 - [ ]  picpay
 - [x]  payments
-- [ ]  email notification
+- [x]  email notification
 - [ ]  unit tests

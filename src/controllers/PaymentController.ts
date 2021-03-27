@@ -99,10 +99,10 @@ class PaymentController {
       })
     
       //Enviar email de aviso pra o cliente
-      const purchase: PurchaseInterface = await Purchase.findById(payment.purchase).populate({path: 'client', populate: {path: 'user'}});    
+      const purchase = await Purchase.findById(payment.purchase).populate({path: 'client', populate: {path: 'user'}});    
       updatePurchase(purchase.client.user, purchase, status, new Date(), 'payment')
-      // await purchasesRecord.save();
-      // await payment.save();
+      await purchasesRecord.save();
+      await payment.save();
       response.json(payment);
     } catch (error) {
       next(error);
@@ -146,10 +146,11 @@ class PaymentController {
               payload: status
           });
           payment.status = status.status;
-          await payment.save();
-          
-          await purchasesRecord.save();
           // Enviar email de aviso para o cliente - aviso de atualizacao de payment
+          const purchase = await Purchase.findById(payment.purchase).populate({path: 'client', populate: {path: 'user'}});    
+          updatePurchase(purchase.client.user, purchase, status, new Date(), 'payment')
+          await payment.save();
+          await purchasesRecord.save();
       }
       response.json({ success: true });
     } catch (error) {
