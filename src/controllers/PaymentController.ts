@@ -70,7 +70,6 @@ class PaymentController {
         return item;
       }));
       const payload: any = await createPayment(senderHash, purchase)
-      console.log(payload)
       payment.payload = (payment.payload) ? payment.payload.concat([payload]) : [payload];
 
       if (payload.code) payment.pagseguroCode = payload.code;
